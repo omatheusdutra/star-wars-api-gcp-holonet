@@ -1,0 +1,197 @@
+openapi: 3.0.3
+info:
+  title: Holonet Galactic Console API
+  version: 1.0.0
+servers:
+  - url: https://{gateway-host}
+    variables:
+      gateway-host:
+        default: api.example.com
+paths:
+  /health:
+    get:
+      summary: Health check
+      security: []
+      responses:
+        '200':
+          description: OK
+  /v1/health:
+    get:
+      summary: Health check (v1)
+      security: []
+      responses:
+        '200':
+          description: OK
+  /v1/meta:
+    get:
+      summary: API metadata
+      security: []
+      responses:
+        '200':
+          description: OK
+  /v1/search:
+    get:
+      summary: Search SWAPI resources
+      parameters:
+        - in: query
+          name: resource
+          required: true
+          schema:
+            type: string
+            enum: [people, planets, starships, films, species, vehicles]
+        - in: query
+          name: q
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+        - in: query
+          name: sort
+          schema:
+            type: string
+          description: |
+            Campo para ordenação (varia por resource). Exemplos:
+            people: name, height, mass, birth_year, gender, created, edited
+            planets: name, population, diameter, climate, terrain, created, edited
+            starships: name, model, manufacturer, cost_in_credits, length, crew, passengers, starship_class, created, edited
+            films: title, episode_id, release_date, director, producer, created, edited
+            species: name, classification, designation, average_height, average_lifespan, language, created, edited
+            vehicles: name, model, manufacturer, cost_in_credits, length, crew, passengers, vehicle_class, created, edited
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [asc, desc]
+        - in: query
+          name: fields
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Search results
+  /v1/films/{id}:
+    get:
+      summary: Get film by id
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Film
+  /v1/people/{id}:
+    get:
+      summary: Get person by id
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Person
+  /v1/planets/{id}:
+    get:
+      summary: Get planet by id
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Planet
+  /v1/starships/{id}:
+    get:
+      summary: Get starship by id
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Starship
+  /v1/films/{id}/characters:
+    get:
+      summary: List expanded characters of a film
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Expanded characters
+  /v1/people/{id}/films:
+    get:
+      summary: List expanded films of a person
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Expanded films
+  /v1/graph:
+    get:
+      summary: Graph traversal
+      parameters:
+        - in: query
+          name: start_resource
+          required: true
+          schema:
+            type: string
+            enum: [people, planets, starships, films, species, vehicles]
+        - in: query
+          name: start_id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: depth
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 3
+      responses:
+        '200':
+          description: Graph data
+  /v1/planets/map:
+    get:
+      summary: Planet map dataset
+      parameters:
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+      responses:
+        '200':
+          description: Planet map items
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+security:
+  - apiKeyAuth: []

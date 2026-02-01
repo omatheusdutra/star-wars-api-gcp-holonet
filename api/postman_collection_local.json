@@ -1,0 +1,956 @@
+{
+  "info": {
+    "name": "Holonet API (Local - no key)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "health"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('response has status ok', function () { pm.expect(pm.response.json().status).to.eql('ok'); });"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "Health - 200",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"status\": \"ok\"}"
+            }
+          ]
+        },
+        {
+          "name": "Health - v1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "health"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('response has status ok', function () { pm.expect(pm.response.json().status).to.eql('ok'); });"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "Health v1 - 200",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"status\": \"ok\", \"source\": {\"name\": \"holonet\", \"url\": \"internal\"}, \"cache\": {\"hit\": false, \"ttl\": 0}, \"correlation_id\": \"00000000-0000-0000-0000-000000000000\"}"
+            }
+          ]
+        },
+        {
+          "name": "Meta - v1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/meta",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "meta"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('response has status ok', function () { pm.expect(pm.response.json().status).to.eql('ok'); });",
+                  "pm.test('has name and version', function () { var json = pm.response.json(); pm.expect(json.name).to.be.a('string'); pm.expect(json.version).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "Meta v1 - 200",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"name\": \"Holonet Galactic Console\", \"version\": \"v1\", \"status\": \"ok\", \"source\": {\"name\": \"holonet\", \"url\": \"internal\"}, \"cache\": {\"hit\": false, \"ttl\": 0}, \"correlation_id\": \"00000000-0000-0000-0000-000000000000\"}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Core",
+      "item": [
+        {
+          "name": "Search",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/search?resource=people&q=luke&page=1&page_size=5&sort=name&order=asc&fields=name,id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "resource",
+                  "value": "people"
+                },
+                {
+                  "key": "q",
+                  "value": "luke"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "page_size",
+                  "value": "5"
+                },
+                {
+                  "key": "sort",
+                  "value": "name"
+                },
+                {
+                  "key": "order",
+                  "value": "asc"
+                },
+                {
+                  "key": "fields",
+                  "value": "name,id"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('has items array', function () { pm.expect(pm.response.json().items).to.be.an('array'); });",
+                  "pm.test('has pagination', function () { pm.expect(pm.response.json().pagination).to.be.an('object'); });"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "Search - 200",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"items\": [{\"name\": \"Luke Skywalker\", \"id\": 1}], \"pagination\": {\"page\": 1, \"page_size\": 5, \"total_items\": 82, \"total_pages\": 17, \"has_next\": true, \"has_prev\": false}, \"source\": {\"name\": \"swapi\", \"url\": \"https://swapi.dev/api\"}, \"cache\": {\"hit\": false, \"ttl\": 180}, \"correlation_id\": \"00000000-0000-0000-0000-000000000000\"}"
+            }
+          ]
+        },
+        {
+          "name": "Films - Get",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/films/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "films",
+                "1"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('has item', function () { pm.expect(pm.response.json().item).to.be.an('object'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "People - Get",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/people/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "people",
+                "1"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('has item', function () { pm.expect(pm.response.json().item).to.be.an('object'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Planets - Get",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/planets/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "planets",
+                "1"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('has item', function () { pm.expect(pm.response.json().item).to.be.an('object'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Starships - Get",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/starships/9",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "starships",
+                "9"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('has item', function () { pm.expect(pm.response.json().item).to.be.an('object'); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Extras",
+      "item": [
+        {
+          "name": "Films - Characters",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/films/1/characters",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "films",
+                "1",
+                "characters"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('has items', function () { pm.expect(pm.response.json().items).to.be.an('array'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "People - Films",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/people/1/films",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "people",
+                "1",
+                "films"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('has items', function () { pm.expect(pm.response.json().items).to.be.an('array'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Graph",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/graph?start_resource=people&start_id=1&depth=2",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "graph"
+              ],
+              "query": [
+                {
+                  "key": "start_resource",
+                  "value": "people"
+                },
+                {
+                  "key": "start_id",
+                  "value": "1"
+                },
+                {
+                  "key": "depth",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('has graph', function () { pm.expect(pm.response.json().graph).to.be.an('object'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Planets Map",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/planets/map?page_size=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "planets",
+                "map"
+              ],
+              "query": [
+                {
+                  "key": "page_size",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('has items', function () { pm.expect(pm.response.json().items).to.be.an('array'); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Gateway (API Key)",
+      "item": [
+        {
+          "name": "GW - Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "health"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('response has status ok', function () { pm.expect(pm.response.json().status).to.eql('ok'); });"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "Health - 200",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"status\": \"ok\"}"
+            }
+          ]
+        },
+        {
+          "name": "GW - Health - v1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "health"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('response has status ok', function () { pm.expect(pm.response.json().status).to.eql('ok'); });"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "Health v1 - 200",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"status\": \"ok\", \"source\": {\"name\": \"holonet\", \"url\": \"internal\"}, \"cache\": {\"hit\": false, \"ttl\": 0}, \"correlation_id\": \"00000000-0000-0000-0000-000000000000\"}"
+            }
+          ]
+        },
+        {
+          "name": "GW - Meta - v1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/meta",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "meta"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('response has status ok', function () { pm.expect(pm.response.json().status).to.eql('ok'); });",
+                  "pm.test('has name and version', function () { var json = pm.response.json(); pm.expect(json.name).to.be.a('string'); pm.expect(json.version).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "Meta v1 - 200",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"name\": \"Holonet Galactic Console\", \"version\": \"v1\", \"status\": \"ok\", \"source\": {\"name\": \"holonet\", \"url\": \"internal\"}, \"cache\": {\"hit\": false, \"ttl\": 0}, \"correlation_id\": \"00000000-0000-0000-0000-000000000000\"}"
+            }
+          ]
+        },
+        {
+          "name": "GW - Search",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/search?resource=people&q=luke&page=1&page_size=5&sort=name&order=asc&fields=name,id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "resource",
+                  "value": "people"
+                },
+                {
+                  "key": "q",
+                  "value": "luke"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "page_size",
+                  "value": "5"
+                },
+                {
+                  "key": "sort",
+                  "value": "name"
+                },
+                {
+                  "key": "order",
+                  "value": "asc"
+                },
+                {
+                  "key": "fields",
+                  "value": "name,id"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('has items array', function () { pm.expect(pm.response.json().items).to.be.an('array'); });",
+                  "pm.test('has pagination', function () { pm.expect(pm.response.json().pagination).to.be.an('object'); });"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "Search - 200",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"items\": [{\"name\": \"Luke Skywalker\", \"id\": 1}], \"pagination\": {\"page\": 1, \"page_size\": 5, \"total_items\": 82, \"total_pages\": 17, \"has_next\": true, \"has_prev\": false}, \"source\": {\"name\": \"swapi\", \"url\": \"https://swapi.dev/api\"}, \"cache\": {\"hit\": false, \"ttl\": 180}, \"correlation_id\": \"00000000-0000-0000-0000-000000000000\"}"
+            }
+          ]
+        },
+        {
+          "name": "GW - Films - Get",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/films/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "films",
+                "1"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('has item', function () { pm.expect(pm.response.json().item).to.be.an('object'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GW - People - Get",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/people/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "people",
+                "1"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('has item', function () { pm.expect(pm.response.json().item).to.be.an('object'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GW - Planets - Get",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/planets/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "planets",
+                "1"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('has item', function () { pm.expect(pm.response.json().item).to.be.an('object'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GW - Starships - Get",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/starships/9",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "starships",
+                "9"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('has item', function () { pm.expect(pm.response.json().item).to.be.an('object'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GW - Films - Characters",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/films/1/characters",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "films",
+                "1",
+                "characters"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('has items', function () { pm.expect(pm.response.json().items).to.be.an('array'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GW - People - Films",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/people/1/films",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "people",
+                "1",
+                "films"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('has items', function () { pm.expect(pm.response.json().items).to.be.an('array'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GW - Graph",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/graph?start_resource=people&start_id=1&depth=2",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "graph"
+              ],
+              "query": [
+                {
+                  "key": "start_resource",
+                  "value": "people"
+                },
+                {
+                  "key": "start_id",
+                  "value": "1"
+                },
+                {
+                  "key": "depth",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('has graph', function () { pm.expect(pm.response.json().graph).to.be.an('object'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GW - Planets Map",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/planets/map?page_size=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "planets",
+                "map"
+              ],
+              "query": [
+                {
+                  "key": "page_size",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('has items', function () { pm.expect(pm.response.json().items).to.be.an('array'); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

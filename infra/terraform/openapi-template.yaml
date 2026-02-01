@@ -1,0 +1,119 @@
+openapi: 3.0.3
+info:
+  title: Holonet Galactic Console API
+  version: 1.0.0
+paths:
+  /health:
+    get:
+      x-google-backend:
+        address: ${backend_url}
+      responses:
+        '200':
+          description: OK
+  /v1/search:
+    get:
+      x-google-backend:
+        address: ${backend_url}
+      responses:
+        '200':
+          description: OK
+  /v1/films/{id}:
+    get:
+      x-google-backend:
+        address: ${backend_url}
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+  /v1/people/{id}:
+    get:
+      x-google-backend:
+        address: ${backend_url}
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+  /v1/planets/{id}:
+    get:
+      x-google-backend:
+        address: ${backend_url}
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+  /v1/starships/{id}:
+    get:
+      x-google-backend:
+        address: ${backend_url}
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+  /v1/films/{id}/characters:
+    get:
+      x-google-backend:
+        address: ${backend_url}
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+  /v1/people/{id}/films:
+    get:
+      x-google-backend:
+        address: ${backend_url}
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+  /v1/graph:
+    get:
+      x-google-backend:
+        address: ${backend_url}
+      responses:
+        '200':
+          description: OK
+  /v1/planets/map:
+    get:
+      x-google-backend:
+        address: ${backend_url}
+      responses:
+        '200':
+          description: OK
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+security:
+  - apiKeyAuth: []

@@ -1,0 +1,48 @@
+### Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg-info/
+dist/
+build/
+.eggs/
+.venv/
+venv/
+env/
+
+### Pytest / Coverage
+.pytest_cache/
+pytest-cache-files-*/
+.coverage*
+htmlcov/
+.tox/
+
+### Environment
+.env
+.env.*
+!.env.example
+
+### OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+### VS Code
+.vscode/
+
+### Ruff
+.ruff_cache/
+
+### Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+.terraform.lock.hcl
+
+### Node (if any tooling)
+node_modules/

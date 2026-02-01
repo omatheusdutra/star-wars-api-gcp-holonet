@@ -1,0 +1,166 @@
+swagger: "2.0"
+info:
+  title: Holonet Galactic Console API
+  version: "1.0.0"
+  description: API Gateway spec for Holonet Galactic Console (Cloud Functions Gen2).
+schemes:
+  - https
+produces:
+  - application/json
+paths:
+  /health:
+    get:
+      operationId: health
+      x-google-backend:
+        address: ${backend_url}
+      responses:
+        "200":
+          description: OK
+  /v1/health:
+    get:
+      operationId: healthV1
+      x-google-backend:
+        address: ${backend_url}
+      responses:
+        "200":
+          description: OK
+  /v1/meta:
+    get:
+      operationId: meta
+      x-google-backend:
+        address: ${backend_url}
+      responses:
+        "200":
+          description: OK
+  /v1/search:
+    get:
+      operationId: search
+      x-google-backend:
+        address: ${backend_url}
+      parameters:
+        - name: resource
+          in: query
+          required: true
+          type: string
+        - name: q
+          in: query
+          type: string
+        - name: page
+          in: query
+          type: integer
+        - name: page_size
+          in: query
+          type: integer
+        - name: sort
+          in: query
+          type: string
+        - name: order
+          in: query
+          type: string
+        - name: fields
+          in: query
+          type: string
+      responses:
+        "200":
+          description: OK
+  /v1/films/{id}:
+    get:
+      operationId: getFilm
+      x-google-backend:
+        address: ${backend_url}
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        "200":
+          description: OK
+  /v1/people/{id}:
+    get:
+      operationId: getPerson
+      x-google-backend:
+        address: ${backend_url}
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        "200":
+          description: OK
+  /v1/planets/{id}:
+    get:
+      operationId: getPlanet
+      x-google-backend:
+        address: ${backend_url}
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        "200":
+          description: OK
+  /v1/starships/{id}:
+    get:
+      operationId: getStarship
+      x-google-backend:
+        address: ${backend_url}
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        "200":
+          description: OK
+  /v1/films/{id}/characters:
+    get:
+      operationId: getFilmCharacters
+      x-google-backend:
+        address: ${backend_url}
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        "200":
+          description: OK
+  /v1/people/{id}/films:
+    get:
+      operationId: getPersonFilms
+      x-google-backend:
+        address: ${backend_url}
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        "200":
+          description: OK
+  /v1/graph:
+    get:
+      operationId: getGraph
+      x-google-backend:
+        address: ${backend_url}
+      responses:
+        "200":
+          description: OK
+  /v1/planets/map:
+    get:
+      operationId: getPlanetsMap
+      x-google-backend:
+        address: ${backend_url}
+      responses:
+        "200":
+          description: OK
+securityDefinitions:
+  apiKeyAuth:
+    type: apiKey
+    in: header
+    name: x-api-key
+security:
+  - apiKeyAuth: []
