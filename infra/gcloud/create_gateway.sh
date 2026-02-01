@@ -24,7 +24,7 @@ if [[ -z "$FUNCTION_URL" ]]; then
   exit 1
 fi
 
-TMP_SPEC="$(mktemp)"
+TMP_SPEC="$(mktemp --suffix=.yaml)"
 sed "s|\${backend_url}|$FUNCTION_URL|g" api/openapi-gateway.yaml > "$TMP_SPEC"
 
 if ! gcloud api-gateway apis describe "$GATEWAY_API_ID" >/dev/null 2>&1; then
