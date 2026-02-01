@@ -31,6 +31,11 @@ if ! gcloud api-gateway apis describe "$GATEWAY_API_ID" >/dev/null 2>&1; then
   gcloud api-gateway apis create "$GATEWAY_API_ID"
 fi
 
+# Ensure config id is unique (API Gateway does not allow update)
+if gcloud api-gateway api-configs describe "$GATEWAY_CONFIG_ID" --api "$GATEWAY_API_ID" >/dev/null 2>&1; then
+  GATEWAY_CONFIG_ID="${GATEWAY_CONFIG_ID}-$(date +%Y%m%d%H%M%S)"
+fi
+
 gcloud api-gateway api-configs create "$GATEWAY_CONFIG_ID" \
   --api "$GATEWAY_API_ID" \
   --openapi-spec "$TMP_SPEC"
