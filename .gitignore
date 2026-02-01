@@ -24,6 +24,12 @@ htmlcov/
 .env
 .env.*
 !.env.example
+key.json
+.key.json
+gcp-key.json
+.gcp-key.json
+**/key.json
+**/gcp-key.json
 
 ### OS
 Thumbs.db
