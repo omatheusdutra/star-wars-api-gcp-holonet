@@ -78,7 +78,7 @@ class SwapiClient:
 
             if attempt < settings.http_retries:
                 base = settings.http_backoff_factor * (2**attempt)
-                jitter = random.uniform(0, 0.1)
+                jitter = random.uniform(0, 0.1)  # nosec B311 - non-cryptographic jitter
                 time.sleep(base + jitter)
 
         raise AppError(
