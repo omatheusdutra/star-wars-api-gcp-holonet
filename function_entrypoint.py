@@ -28,10 +28,11 @@ def app(request):
         if isinstance(query_string, bytes):
             query_string = query_string.decode("utf-8", errors="ignore")
         environ["QUERY_STRING"] = query_string
-    if "wsgi.input" not in environ:
-        body = request.get_data() if hasattr(request, "get_data") else b""
-        environ["wsgi.input"] = BytesIO(body)
-        environ.setdefault("CONTENT_LENGTH", str(len(body)))
+
+    # Normalize the request body to a BytesIO buffer to avoid blocking reads.
+    body = request.get_data() if hasattr(request, "get_data") else b""
+    environ["wsgi.input"] = BytesIO(body)
+    environ["CONTENT_LENGTH"] = str(len(body))
 
     path = environ.get("PATH_INFO", "") or ""
     service = os.environ.get("K_SERVICE") or ""
