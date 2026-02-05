@@ -2,6 +2,7 @@ param(
   [string]$ProjectId,
   [string]$Region = "us-central1",
   [string]$FunctionName = "holonet-api",
+  [string]$BackendUrl = "",
   [string]$GatewayApiId = "holonet-api",
   [string]$GatewayConfigId = "holonet-config",
   [string]$GatewayId = "holonet-gateway"
@@ -18,13 +19,19 @@ $FunctionUrl = gcloud functions describe $FunctionName --gen2 --region $Region -
 if (-not $FunctionUrl) {
   $FunctionUrl = gcloud functions describe $FunctionName --gen2 --region $Region --format="value(serviceConfig.uri)"
 }
-if (-not $FunctionUrl) {
-  Write-Host "Could not resolve Cloud Function URL for $FunctionName in $Region."
+if (-not $BackendUrl) {
+  $BackendUrl = $FunctionUrl
+}
+if (-not $BackendUrl) {
+  $BackendUrl = gcloud run services describe $FunctionName --region $Region --format="value(status.url)"
+}
+if (-not $BackendUrl) {
+  Write-Host "Could not resolve backend URL for $FunctionName in $Region."
   exit 1
 }
 
 $TempSpec = Join-Path $env:TEMP ("openapi-gateway-{0}.yaml" -f ([guid]::NewGuid().ToString()))
-(Get-Content -Path "api\\openapi-gateway.yaml" -Raw).Replace('${backend_url}', $FunctionUrl) | Set-Content -Encoding UTF8 $TempSpec
+(Get-Content -Path "api\\openapi-gateway.yaml" -Raw).Replace('${backend_url}', $BackendUrl) | Set-Content -Encoding UTF8 $TempSpec
 
 try {
   gcloud api-gateway apis describe $GatewayApiId | Out-Null
