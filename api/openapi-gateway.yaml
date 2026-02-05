@@ -13,6 +13,8 @@ paths:
       operationId: health
       x-google-backend:
         address: ${backend_url}
+        path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 60.0
       responses:
         "200":
           description: OK
@@ -21,6 +23,8 @@ paths:
       operationId: healthV1
       x-google-backend:
         address: ${backend_url}
+        path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 60.0
       responses:
         "200":
           description: OK
@@ -29,6 +33,8 @@ paths:
       operationId: meta
       x-google-backend:
         address: ${backend_url}
+        path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 60.0
       responses:
         "200":
           description: OK
@@ -37,6 +43,8 @@ paths:
       operationId: search
       x-google-backend:
         address: ${backend_url}
+        path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 60.0
       parameters:
         - name: resource
           in: query
@@ -68,6 +76,8 @@ paths:
       operationId: getFilm
       x-google-backend:
         address: ${backend_url}
+        path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 60.0
       parameters:
         - name: id
           in: path
@@ -81,6 +91,8 @@ paths:
       operationId: getPerson
       x-google-backend:
         address: ${backend_url}
+        path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 60.0
       parameters:
         - name: id
           in: path
@@ -94,6 +106,8 @@ paths:
       operationId: getPlanet
       x-google-backend:
         address: ${backend_url}
+        path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 60.0
       parameters:
         - name: id
           in: path
@@ -107,6 +121,8 @@ paths:
       operationId: getStarship
       x-google-backend:
         address: ${backend_url}
+        path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 60.0
       parameters:
         - name: id
           in: path
@@ -120,6 +136,8 @@ paths:
       operationId: getFilmCharacters
       x-google-backend:
         address: ${backend_url}
+        path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 60.0
       parameters:
         - name: id
           in: path
@@ -133,6 +151,8 @@ paths:
       operationId: getPersonFilms
       x-google-backend:
         address: ${backend_url}
+        path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 60.0
       parameters:
         - name: id
           in: path
@@ -146,6 +166,8 @@ paths:
       operationId: getGraph
       x-google-backend:
         address: ${backend_url}
+        path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 60.0
       responses:
         "200":
           description: OK
@@ -154,6 +176,8 @@ paths:
       operationId: getPlanetsMap
       x-google-backend:
         address: ${backend_url}
+        path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 60.0
       responses:
         "200":
           description: OK
@@ -164,3 +188,7 @@ securityDefinitions:
     name: x-api-key
 security:
   - apiKeyAuth: []
+
+
+
+
