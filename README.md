@@ -18,7 +18,7 @@ Documentação técnica: este README + pasta `docs/` (POSTMAN, deploys e checkli
 - 🧭 Grafo leve para visualizações
 - 🗺️ Dataset de planetas para mapa interativo
 - ⚡ Cache (in-memory ou Redis)
-- 🧪 Testes com cobertura alta
+- 🧪 Testes com cobertura 100%
 - 🧰 Postman collection pronta
 
 ---
