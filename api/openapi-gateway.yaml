@@ -8,11 +8,296 @@ schemes:
 produces:
   - application/json
 paths:
+  /:
+    get:
+      operationId: root
+      security: []
+      x-google-backend:
+        address: https://holonet-api-147959006843.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 60.0
+      responses:
+        "200":
+          description: OK
+  /docs:
+    get:
+      operationId: docs
+      security: []
+      x-google-backend:
+        address: https://holonet-api-147959006843.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 60.0
+      responses:
+        "200":
+          description: OK
+  /openapi.json:
+    get:
+      operationId: openapiJson
+      security: []
+      x-google-backend:
+        address: https://holonet-api-147959006843.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 60.0
+      responses:
+        "200":
+          description: OK
+  /films:
+    get:
+      operationId: publicFilms
+      security: []
+      x-google-backend:
+        address: https://holonet-api-147959006843.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 60.0
+      parameters:
+        - name: q
+          in: query
+          type: string
+        - name: search
+          in: query
+          type: string
+        - name: page
+          in: query
+          type: integer
+        - name: page_size
+          in: query
+          type: integer
+        - name: all
+          in: query
+          type: boolean
+        - name: sort
+          in: query
+          type: string
+        - name: order
+          in: query
+          type: string
+        - name: order_by
+          in: query
+          type: string
+        - name: reverse
+          in: query
+          type: boolean
+        - name: fields
+          in: query
+          type: string
+      responses:
+        "200":
+          description: OK
+  /characters:
+    get:
+      operationId: publicCharacters
+      security: []
+      x-google-backend:
+        address: https://holonet-api-147959006843.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 60.0
+      parameters:
+        - name: q
+          in: query
+          type: string
+        - name: search
+          in: query
+          type: string
+        - name: page
+          in: query
+          type: integer
+        - name: page_size
+          in: query
+          type: integer
+        - name: all
+          in: query
+          type: boolean
+        - name: sort
+          in: query
+          type: string
+        - name: order
+          in: query
+          type: string
+        - name: order_by
+          in: query
+          type: string
+        - name: reverse
+          in: query
+          type: boolean
+        - name: fields
+          in: query
+          type: string
+      responses:
+        "200":
+          description: OK
+  /planets:
+    get:
+      operationId: publicPlanets
+      security: []
+      x-google-backend:
+        address: https://holonet-api-147959006843.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 60.0
+      parameters:
+        - name: q
+          in: query
+          type: string
+        - name: search
+          in: query
+          type: string
+        - name: page
+          in: query
+          type: integer
+        - name: page_size
+          in: query
+          type: integer
+        - name: all
+          in: query
+          type: boolean
+        - name: sort
+          in: query
+          type: string
+        - name: order
+          in: query
+          type: string
+        - name: order_by
+          in: query
+          type: string
+        - name: reverse
+          in: query
+          type: boolean
+        - name: fields
+          in: query
+          type: string
+      responses:
+        "200":
+          description: OK
+  /starships:
+    get:
+      operationId: publicStarships
+      security: []
+      x-google-backend:
+        address: https://holonet-api-147959006843.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 60.0
+      parameters:
+        - name: q
+          in: query
+          type: string
+        - name: search
+          in: query
+          type: string
+        - name: page
+          in: query
+          type: integer
+        - name: page_size
+          in: query
+          type: integer
+        - name: all
+          in: query
+          type: boolean
+        - name: sort
+          in: query
+          type: string
+        - name: order
+          in: query
+          type: string
+        - name: order_by
+          in: query
+          type: string
+        - name: reverse
+          in: query
+          type: boolean
+        - name: fields
+          in: query
+          type: string
+      responses:
+        "200":
+          description: OK
+  /vehicles:
+    get:
+      operationId: publicVehicles
+      security: []
+      x-google-backend:
+        address: https://holonet-api-147959006843.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 60.0
+      parameters:
+        - name: q
+          in: query
+          type: string
+        - name: search
+          in: query
+          type: string
+        - name: page
+          in: query
+          type: integer
+        - name: page_size
+          in: query
+          type: integer
+        - name: all
+          in: query
+          type: boolean
+        - name: sort
+          in: query
+          type: string
+        - name: order
+          in: query
+          type: string
+        - name: order_by
+          in: query
+          type: string
+        - name: reverse
+          in: query
+          type: boolean
+        - name: fields
+          in: query
+          type: string
+      responses:
+        "200":
+          description: OK
+  /species:
+    get:
+      operationId: publicSpecies
+      security: []
+      x-google-backend:
+        address: https://holonet-api-147959006843.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 60.0
+      parameters:
+        - name: q
+          in: query
+          type: string
+        - name: search
+          in: query
+          type: string
+        - name: page
+          in: query
+          type: integer
+        - name: page_size
+          in: query
+          type: integer
+        - name: all
+          in: query
+          type: boolean
+        - name: sort
+          in: query
+          type: string
+        - name: order
+          in: query
+          type: string
+        - name: order_by
+          in: query
+          type: string
+        - name: reverse
+          in: query
+          type: boolean
+        - name: fields
+          in: query
+          type: string
+      responses:
+        "200":
+          description: OK
   /health:
     get:
       operationId: health
       x-google-backend:
-        address: ${backend_url}
+        address: https://holonet-api-147959006843.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       responses:
@@ -22,7 +307,7 @@ paths:
     get:
       operationId: healthV1
       x-google-backend:
-        address: ${backend_url}
+        address: https://holonet-api-147959006843.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       responses:
@@ -32,7 +317,7 @@ paths:
     get:
       operationId: meta
       x-google-backend:
-        address: ${backend_url}
+        address: https://holonet-api-147959006843.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       responses:
@@ -42,7 +327,7 @@ paths:
     get:
       operationId: search
       x-google-backend:
-        address: ${backend_url}
+        address: https://holonet-api-147959006843.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       parameters:
@@ -51,6 +336,9 @@ paths:
           required: true
           type: string
         - name: q
+          in: query
+          type: string
+        - name: search
           in: query
           type: string
         - name: page
@@ -65,6 +353,12 @@ paths:
         - name: order
           in: query
           type: string
+        - name: order_by
+          in: query
+          type: string
+        - name: reverse
+          in: query
+          type: boolean
         - name: fields
           in: query
           type: string
@@ -75,7 +369,7 @@ paths:
     get:
       operationId: getFilm
       x-google-backend:
-        address: ${backend_url}
+        address: https://holonet-api-147959006843.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       parameters:
@@ -90,7 +384,7 @@ paths:
     get:
       operationId: getPerson
       x-google-backend:
-        address: ${backend_url}
+        address: https://holonet-api-147959006843.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       parameters:
@@ -105,7 +399,7 @@ paths:
     get:
       operationId: getPlanet
       x-google-backend:
-        address: ${backend_url}
+        address: https://holonet-api-147959006843.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       parameters:
@@ -120,7 +414,7 @@ paths:
     get:
       operationId: getStarship
       x-google-backend:
-        address: ${backend_url}
+        address: https://holonet-api-147959006843.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       parameters:
@@ -135,7 +429,7 @@ paths:
     get:
       operationId: getFilmCharacters
       x-google-backend:
-        address: ${backend_url}
+        address: https://holonet-api-147959006843.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       parameters:
@@ -150,7 +444,7 @@ paths:
     get:
       operationId: getPersonFilms
       x-google-backend:
-        address: ${backend_url}
+        address: https://holonet-api-147959006843.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       parameters:
@@ -165,7 +459,7 @@ paths:
     get:
       operationId: getGraph
       x-google-backend:
-        address: ${backend_url}
+        address: https://holonet-api-147959006843.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       responses:
@@ -175,7 +469,7 @@ paths:
     get:
       operationId: getPlanetsMap
       x-google-backend:
-        address: ${backend_url}
+        address: https://holonet-api-147959006843.us-central1.run.app
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       responses:

@@ -8,6 +8,339 @@ servers:
       gateway-host:
         default: api.example.com
 paths:
+  /:
+    get:
+      summary: Root message
+      security: []
+      responses:
+        '200':
+          description: OK
+  /docs:
+    get:
+      summary: Swagger UI
+      security: []
+      responses:
+        '200':
+          description: OK
+  /openapi.json:
+    get:
+      summary: OpenAPI document
+      security: []
+      responses:
+        '200':
+          description: OK
+  /films:
+    get:
+      summary: List films (public)
+      security: []
+      parameters:
+        - in: query
+          name: q
+          schema:
+            type: string
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+        - in: query
+          name: all
+          schema:
+            type: boolean
+        - in: query
+          name: sort
+          schema:
+            type: string
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [asc, desc]
+        - in: query
+          name: order_by
+          schema:
+            type: string
+        - in: query
+          name: reverse
+          schema:
+            type: boolean
+        - in: query
+          name: fields
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Films
+  /characters:
+    get:
+      summary: List characters (public)
+      security: []
+      parameters:
+        - in: query
+          name: q
+          schema:
+            type: string
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+        - in: query
+          name: all
+          schema:
+            type: boolean
+        - in: query
+          name: sort
+          schema:
+            type: string
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [asc, desc]
+        - in: query
+          name: order_by
+          schema:
+            type: string
+        - in: query
+          name: reverse
+          schema:
+            type: boolean
+        - in: query
+          name: fields
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Characters
+  /planets:
+    get:
+      summary: List planets (public)
+      security: []
+      parameters:
+        - in: query
+          name: q
+          schema:
+            type: string
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+        - in: query
+          name: all
+          schema:
+            type: boolean
+        - in: query
+          name: sort
+          schema:
+            type: string
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [asc, desc]
+        - in: query
+          name: order_by
+          schema:
+            type: string
+        - in: query
+          name: reverse
+          schema:
+            type: boolean
+        - in: query
+          name: fields
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Planets
+  /starships:
+    get:
+      summary: List starships (public)
+      security: []
+      parameters:
+        - in: query
+          name: q
+          schema:
+            type: string
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+        - in: query
+          name: all
+          schema:
+            type: boolean
+        - in: query
+          name: sort
+          schema:
+            type: string
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [asc, desc]
+        - in: query
+          name: order_by
+          schema:
+            type: string
+        - in: query
+          name: reverse
+          schema:
+            type: boolean
+        - in: query
+          name: fields
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Starships
+  /vehicles:
+    get:
+      summary: List vehicles (public)
+      security: []
+      parameters:
+        - in: query
+          name: q
+          schema:
+            type: string
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+        - in: query
+          name: all
+          schema:
+            type: boolean
+        - in: query
+          name: sort
+          schema:
+            type: string
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [asc, desc]
+        - in: query
+          name: order_by
+          schema:
+            type: string
+        - in: query
+          name: reverse
+          schema:
+            type: boolean
+        - in: query
+          name: fields
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Vehicles
+  /species:
+    get:
+      summary: List species (public)
+      security: []
+      parameters:
+        - in: query
+          name: q
+          schema:
+            type: string
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+        - in: query
+          name: all
+          schema:
+            type: boolean
+        - in: query
+          name: sort
+          schema:
+            type: string
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [asc, desc]
+        - in: query
+          name: order_by
+          schema:
+            type: string
+        - in: query
+          name: reverse
+          schema:
+            type: boolean
+        - in: query
+          name: fields
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Species
   /health:
     get:
       summary: Health check
@@ -44,6 +377,10 @@ paths:
           schema:
             type: string
         - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
           name: page
           schema:
             type: integer
@@ -71,6 +408,14 @@ paths:
           schema:
             type: string
             enum: [asc, desc]
+        - in: query
+          name: order_by
+          schema:
+            type: string
+        - in: query
+          name: reverse
+          schema:
+            type: boolean
         - in: query
           name: fields
           schema:
