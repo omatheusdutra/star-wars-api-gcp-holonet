@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     max_expand_concurrency: int = Field(default=8, alias="MAX_EXPAND_CONCURRENCY")
 
     graph_max_nodes: int = Field(default=250, alias="GRAPH_MAX_NODES")
-    graph_max_depth: int = Field(default=2, alias="GRAPH_MAX_DEPTH")
+    graph_max_depth: int = Field(default=1, alias="GRAPH_MAX_DEPTH")
     map_max_pages: int = Field(default=4, alias="MAP_MAX_PAGES")
 
     require_api_key: bool = Field(default=False, alias="REQUIRE_API_KEY")

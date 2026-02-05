@@ -6,7 +6,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from holonet.config import settings
 from holonet.errors import AppError
 from holonet.logging import build_request_logger, get_correlation_id, setup_logging
-from holonet.routes import graph, health, planets_map, resources, search
+from holonet.routes import graph, health, planets_map, public, resources, search
 from holonet.utils.cache import build_cache
 
 
@@ -75,8 +75,9 @@ def create_app() -> FastAPI:
 
     @app.get("/")
     def root():
-        return {"name": "Holonet Galactic Console", "version": "v1"}
+        return {"Luke": "I am your father!"}
 
+    app.include_router(public.router)
     app.include_router(health.router)
     app.include_router(search.router, prefix="/v1")
     app.include_router(planets_map.router, prefix="/v1")
