@@ -21,6 +21,26 @@ def test_search_endpoint(client, monkeypatch):
     assert payload["correlation_id"]
 
 
+def test_search_aliases_and_reverse(client, monkeypatch):
+    def fake_search(self, resource, query, page):
+        return {
+            "count": 2,
+            "results": [
+                {"name": "A", "url": "https://swapi.dev/api/people/1/"},
+                {"name": "B", "url": "https://swapi.dev/api/people/2/"},
+            ],
+            "next": None,
+            "_cache": {"hit": False, "ttl": 180},
+        }
+
+    monkeypatch.setattr(swapi_client.SwapiClient, "search", fake_search)
+
+    resp = client.get("/v1/search?resource=people&search=luke&order_by=name&reverse=true")
+    assert resp.status_code == 200
+    payload = resp.json()
+    assert payload["items"][0]["name"] == "B"
+
+
 def test_search_rejects_page_size_over_max(client):
     too_large = settings.max_page_size + 1
     resp = client.get(f"/v1/search?resource=people&page_size={too_large}")

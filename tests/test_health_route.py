@@ -27,3 +27,11 @@ def test_meta_route(client):
     assert payload["source"]["name"] == "holonet"
     assert payload["cache"]["hit"] is False
     assert payload["correlation_id"]
+
+
+def test_root_handler_direct():
+    from holonet.routes import health as health_routes
+
+    payload = health_routes.root(correlation_id="test-correlation")
+    assert payload["message"] == "Luke, I am your father!"
+    assert payload["correlation_id"] == "test-correlation"

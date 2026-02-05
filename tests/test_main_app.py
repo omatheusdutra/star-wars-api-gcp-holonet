@@ -6,7 +6,7 @@ from holonet.errors import AppError
 def test_root_route(client):
     resp = client.get("/")
     assert resp.status_code == 200
-    assert resp.json()["name"] == "Holonet Galactic Console"
+    assert resp.json()["Luke"] == "I am your father!"
 
 
 def test_auth_guard_enforced(monkeypatch):
