@@ -1,4 +1,5 @@
 from holonet.clients import swapi_client
+from holonet.config import settings
 from holonet.errors import AppError
 
 
@@ -18,6 +19,14 @@ def test_search_endpoint(client, monkeypatch):
     payload = resp.json()
     assert payload["items"][0]["name"] == "Tatooine"
     assert payload["correlation_id"]
+
+
+def test_search_rejects_page_size_over_max(client):
+    too_large = settings.max_page_size + 1
+    resp = client.get(f"/v1/search?resource=people&page_size={too_large}")
+    assert resp.status_code == 400
+    payload = resp.json()
+    assert payload["error"]["message"] == "page_size exceeds maximum"
 
 
 def test_get_film(client, monkeypatch):
