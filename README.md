@@ -8,7 +8,7 @@
 
 Uma API para fãs de Star Wars. Conecta recursos da SWAPI e entrega uma experiência rica com filtros, paginação, ordenação, cache, correlações e grafo de relacionamentos. Projetada para rodar no GCP com Cloud Functions + API Gateway.
 
-Documentação técnica: este README + pasta `docs/` (POSTMAN, deploys e checklist).
+> **Documentação técnica (para avaliação):** este README + pasta `docs/` (POSTMAN, deploys e checklist).
 
 ---
 
