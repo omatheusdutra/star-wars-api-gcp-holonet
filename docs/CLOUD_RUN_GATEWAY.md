@@ -43,6 +43,33 @@ terraform apply -var "project_id=SEU_PROJETO" -var "source_archive_path=../holon
 - Importe `api/openapi-gateway.yaml`.
 - Substitua manualmente o backend pela URL do Cloud Run.
 
+## 2.1) IAM entre API Gateway e Cloud Run (recomendado)
+
+1) Remova acesso público:
+```bash
+gcloud run services remove-iam-policy-binding holonet-api \
+  --region us-central1 \
+  --member="allUsers" \
+  --role="roles/run.invoker"
+```
+
+2) Conceda acesso ao API Gateway:
+```bash
+PROJECT_NUMBER=$(gcloud projects describe SEU_PROJETO --format="value(projectNumber)")
+gcloud run services add-iam-policy-binding holonet-api \
+  --region us-central1 \
+  --member="serviceAccount:service-$PROJECT_NUMBER@gcp-sa-apigateway.iam.gserviceaccount.com" \
+  --role="roles/run.invoker"
+```
+
+3) No OpenAPI, adicione `jwt_audience` igual à URL do Cloud Run:
+```yaml
+x-google-backend:
+  address: https://SEU-CLOUD-RUN
+  jwt_audience: https://SEU-CLOUD-RUN
+  path_translation: APPEND_PATH_TO_ADDRESS
+```
+
 ## 3) API Key
 
 - Habilite API Key no API Gateway.

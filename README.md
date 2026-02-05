@@ -1,10 +1,8 @@
-﻿# 🌌 Holonet Galactic Console
+# 🌌 Holonet Galactic Console
 
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.115.6-009688?logo=fastapi&logoColor=white) ![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white) ![HTTPX](https://img.shields.io/badge/HTTPX-0.27.2-000000?logo=python&logoColor=white) ![Pydantic](https://img.shields.io/badge/Pydantic-2.6.1-E92063?logo=pydantic&logoColor=white) ![Uvicorn](https://img.shields.io/badge/Uvicorn-0.30.6-2F855A?logo=uvicorn&logoColor=white) ![Pytest](https://img.shields.io/badge/pytest-7.4.4-0A9EDC?logo=pytest&logoColor=white) ![Redis](https://img.shields.io/badge/Redis-5.0.1-DC382D?logo=redis&logoColor=white) ![GCP](https://img.shields.io/badge/GCP-Cloud%20Functions%20%26%20API%20Gateway-4285F4?logo=googlecloud&logoColor=white)
 
-
 ![Holonet Banner](docs/banner.jpg)
-
 
 Uma API para fãs de Star Wars. Conecta recursos da SWAPI e entrega uma experiência rica com filtros, paginação, ordenação, cache, correlações e grafo de relacionamentos. Projetada para rodar no GCP com Cloud Functions + API Gateway.
 
@@ -12,18 +10,23 @@ Uma API para fãs de Star Wars. Conecta recursos da SWAPI e entrega uma experiê
 
 ---
 
-## 🚀 Features
+## ✨ Features
 - 🔎 Busca unificada por `people`, `planets`, `starships`, `films`, `species`, `vehicles`
-- 🔗 Expansão de dados correlacionados (filmes ↔ personagens)
-- 🧭 Grafo leve para visualizações
+- 📄 Paginação normalizada (`page`, `page_size`) com limites de segurança
+- 🔀 Ordenação local com whitelist de campos + aliases (`order_by`, `reverse`)
+- 🎯 Projeção de campos via `fields`
+- 🌐 Endpoints públicos (sem `/v1`) para navegação rápida
+- 🔗 Correlações (filmes ↔ personagens)
+- 🕸️ Grafo de relacionamentos
 - 🗺️ Dataset de planetas para mapa interativo
-- ⚡ Cache (in-memory ou Redis)
-- 🧪 Testes com cobertura 100%
-- 🧰 Postman collection pronta
+- ⚡ Cache (in-memory ou Redis) com TTL configurável
+- 🛡️ Resiliência: timeout, retries e backoff
+- 🔐 API Gateway com API Key + IAM no Cloud Run
+- 📦 OpenAPI + Postman collection pronta
+- ✅ Testes com cobertura 100%
 
 ---
-
-## 🧩 Arquitetura (GCP)
+## 🧭 Arquitetura (GCP)
 
 ```mermaid
 flowchart LR
@@ -42,50 +45,50 @@ flowchart LR
 
 ---
 
-## 📦 Estrutura do projeto
+## 🗂️ Estrutura do projeto
 
 ```
 HOLONET-HUB/
-├─ .github/
-│  └─ workflows/
-│     ├─ ci.yml
-│     └─ deploy.yml
-├─ src/
-│  └─ holonet/
-│     ├─ main.py
-│     ├─ config.py
-│     ├─ deps.py
-│     ├─ errors.py
-│     ├─ logging.py
-│     ├─ routes/
-│     ├─ schemas/
-│     ├─ services/
-│     ├─ clients/
-│     └─ utils/
-├─ function_entrypoint.py
-├─ api/
-│  ├─ openapi-gateway.yaml
-│  ├─ openapi-local.yaml
-│  ├─ openapi-gateway.resolved.yaml
-│  ├─ postman_collection.json
-│  ├─ postman_environment_local.json
-│  ├─ postman_environment_gateway.json
-│  └─ postman_collection_local.json
-├─ docs/
-│  ├─ POSTMAN.md
-│  └─ CLOUD_RUN_GATEWAY.md
-├─ infra/
-├─ tests/
-├─ pyproject.toml
-├─ .pre-commit-config.yaml
-├─ LICENSE
-└─ README.md
+|-- .github/
+|   `-- workflows/
+|       |-- ci.yml
+|       `-- deploy.yml
+|-- src/
+|   `-- holonet/
+|       |-- main.py
+|       |-- config.py
+|       |-- deps.py
+|       |-- errors.py
+|       |-- logging.py
+|       |-- routes/
+|       |-- schemas/
+|       |-- services/
+|       |-- clients/
+|       `-- utils/
+|-- function_entrypoint.py
+|-- api/
+|   |-- openapi-gateway.yaml
+|   |-- openapi-local.yaml
+|   |-- postman_collection.json
+|   |-- postman_environment_local.json
+|   |-- postman_environment_gateway.json
+|   `-- postman_collection_local.json
+|-- docs/
+|   |-- POSTMAN.md
+|   `-- CLOUD_RUN_GATEWAY.md
+|-- infra/
+|-- tests/
+|-- pyproject.toml
+|-- .pre-commit-config.yaml
+|-- LICENSE
+`-- README.md
 ```
 
 **Contrato OpenAPI (fonte da verdade)**
 - `api/openapi-gateway.yaml` → contrato usado no API Gateway (produção).
 - `api/openapi-local.yaml` → referência local para desenvolvimento.
-- `api/openapi-gateway.resolved.yaml` → **somente visualização** no Swagger Editor (não usar para deploy).
+
+> Se você optar por **Cloud Functions** em vez de **Cloud Run**, ajuste o `x-google-backend.address` no `api/openapi-gateway.yaml` para a URL da Function antes de recriar o Gateway.
 
 ---
 
@@ -97,7 +100,7 @@ HOLONET-HUB/
 
 ---
 
-## 🛠️ Instalação e Setup
+## 🛠️ Instalação e Setup (Local)
 
 ### 1) Criar ambiente virtual
 
@@ -112,13 +115,25 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
-### 3) Rodar local
+### 3) Configurar variáveis (opcional)
+
+Crie um `.env` a partir do exemplo:
+```bash
+cp .env.example .env
+```
+
+Windows (PowerShell):
+```powershell
+Copy-Item .env.example .env
+```
+
+### 4) Rodar local
 
 ```bash
 uvicorn --app-dir src holonet.main:app --reload --port 8000
 ```
 
-### 4) Testar rápido
+### 5) Testar rápido
 
 ```bash
 curl "http://127.0.0.1:8000/health"
@@ -147,69 +162,61 @@ API_KEY=
 
 ---
 
-## 🧪 Testes
+## 🔗 URL Pública de Produção (API Gateway)
 
-```bash
-pip install -r requirements-dev.txt
-pytest -q --cov=holonet --cov-report=term-missing
+A API esta disponivel publicamente atraves do **API Gateway**:
+
+```text
+https://holonet-gateway-1vyyz0cb.uc.gateway.dev
 ```
 
-**Windows (se houver conflito com arquivo `.coverage`)**
-```powershell
-$env:COVERAGE_FILE="$env:TEMP\\holonet_coverage"
-pytest -q --cov=holonet --cov-report=term-missing
+**Swagger UI**
+```text
+https://holonet-gateway-1vyyz0cb.uc.gateway.dev/docs
 ```
 
-Sem coverage:
-```bash
-pytest -q --no-cov
+**OpenAPI JSON**
+```text
+https://holonet-gateway-1vyyz0cb.uc.gateway.dev/openapi.json
 ```
 
-Paralelo (mais rápido):
-```bash
-pytest -q --no-cov -n auto
-```
+**Endpoints principais**
+- Base:
+  ```text
+  https://holonet-gateway-1vyyz0cb.uc.gateway.dev/
+  ```
+- Filmes:
+  ```text
+  https://holonet-gateway-1vyyz0cb.uc.gateway.dev/films
+  ```
+- Personagens:
+  ```text
+  https://holonet-gateway-1vyyz0cb.uc.gateway.dev/characters
+  ```
+- Planetas:
+  ```text
+  https://holonet-gateway-1vyyz0cb.uc.gateway.dev/planets
+  ```
+- Naves:
+  ```text
+  https://holonet-gateway-1vyyz0cb.uc.gateway.dev/starships
+  ```
+- Veiculos:
+  ```text
+  https://holonet-gateway-1vyyz0cb.uc.gateway.dev/vehicles
+  ```
+- Especies:
+  ```text
+  https://holonet-gateway-1vyyz0cb.uc.gateway.dev/species
+  ```
+
+**Obs:** rotas `/v1/*` exigem `x-api-key`.
 
 ---
 
-## 🧹 Lint & Format
+## 📚 Endpoints (exemplos)
 
-```bash
-ruff check src tests
-ruff format --check src tests
-```
-
----
-
-## 🧷 Pre-commit (bônus)
-
-```bash
-pip install pre-commit
-pre-commit install
-```
-
----
-
-## 📬 Postman
-
-- Collection: `api/postman_collection.json`
-- Collection (local): `api/postman_collection_local.json`
-- Local env: `api/postman_environment_local.json`
-- Gateway env: `api/postman_environment_gateway.json`
-
-**Como usar**
-1. Importar a collection e o environment
-2. Selecionar o environment **Holonet Local** ou **Holonet Gateway**
-3. Para Gateway, preencher `api_key` e usar apenas rotas `/v1/*`
-4. Rodar as requests pelo Runner
-
-Guia completo: `docs/POSTMAN.md`
-
----
-
-## 🎯 Endpoints (exemplos)
-
-### ✅ Health
+### ❤️ Health
 ```
 GET /health  # local/dev
 GET /v1/health
@@ -226,19 +233,55 @@ GET /v1/meta
 {"name":"Holonet Galactic Console","version":"v1","status":"ok","source":{"name":"holonet","url":"internal"},"cache":{"hit":false,"ttl":0},"correlation_id":"c6a3b6c2-6c2d-4a86-9c1a-2f4b4e6c9e01"}
 ```
 
+---
+
+### 🌐 Públicos (sem /v1)
+```
+GET /films
+GET /characters
+GET /planets
+GET /starships
+GET /vehicles
+GET /species
+```
+
+**Query params suportados**
+- `q` ou `search`: termo de busca
+- `page`, `page_size`: paginação
+- `all=true|false`: retorna todos os resultados (default `true`)
+- `sort` ou `order_by`: campo de ordenação
+- `order=asc|desc` ou `reverse=true`
+- `fields`: projeção de campos
+
+**Exemplos**
+```
+GET /planets?search=tatooine
+GET /films?order_by=release_date&reverse=true&all=false&page=1&page_size=5
+```
+
+> Dica: `all=true` agrega paginas e pode aumentar o tempo de resposta.
+
+---
+
 ### 🔎 Search
 ```
 GET /v1/search?resource=people&q=luke&page=1&page_size=5&sort=name&order=asc&fields=name,id
+GET /v1/search?resource=people&search=luke&order_by=name&reverse=true
 ```
+
+**Aliases suportados**
+- `search` → `q`
+- `order_by` → `sort`
+- `reverse=true` → forca `order=desc`
 
 **Campos de ordenação suportados por recurso**
 
 ```
-people:   name, height, mass, birth_year, gender, created, edited
-planets:  name, population, diameter, climate, terrain, created, edited, rotation_period, orbital_period, surface_water
+people: name, height, mass, birth_year, gender, created, edited
+planets: name, population, diameter, climate, terrain, created, edited, rotation_period, orbital_period, surface_water
 starships: name, model, manufacturer, cost_in_credits, length, crew, passengers, starship_class, created, edited
-films:    title, episode_id, release_date, director, producer, created, edited
-species:  name, classification, designation, average_height, average_lifespan, language, created, edited
+films: title, episode_id, release_date, director, producer, created, edited
+species: name, classification, designation, average_height, average_lifespan, language, created, edited
 vehicles: name, model, manufacturer, cost_in_credits, length, crew, passengers, vehicle_class, created, edited
 ```
 
@@ -281,7 +324,7 @@ GET /v1/films/1
 }
 ```
 
-### 🧑 People / 🪐 Planets / 🚀 Starships
+### 👤 People / 🪐 Planets / 🚀 Starships
 ```
 GET /v1/people/{id}
 GET /v1/planets/{id}
@@ -358,7 +401,7 @@ GET /v1/people/{id}/films
 }
 ```
 
-### 🧠 Graph
+### 🕸️ Graph
 ```
 GET /v1/graph?start_resource=people&start_id=1&depth=2
 ```
@@ -411,7 +454,26 @@ GET /v1/planets/map?page_size=10
 
 ---
 
-## ☁️ Deploy no GCP (Cloud Functions Gen2 + API Gateway)
+## 🔒 Segurança
+- API Gateway protegido por **API Key** (`x-api-key`).
+- No Cloud Run, recomenda-se **IAM** para permitir invocação **apenas pelo API Gateway**.
+- HTTPS obrigatório em produção.
+
+---
+
+## 🚀 Deploy no GCP - Cloud Functions Gen2 + API Gateway
+
+![Deploy](https://img.shields.io/badge/Deploy-Cloud%20Functions%20Gen2-4285F4?logo=googlecloud&logoColor=white)
+![Gateway](https://img.shields.io/badge/API%20Gateway-Enabled-1A73E8?logo=googlecloud&logoColor=white)
+![Security](https://img.shields.io/badge/Security-API%20Key-4CAF50)
+![Monitoring](https://img.shields.io/badge/Monitoring-Cloud%20Logging-0F9D58?logo=googlecloud&logoColor=white)
+
+A API e executada em arquitetura serverless no GCP, com **Cloud Functions Gen2** exposta via **API Gateway**.
+
+#### Arquitetura de Deploy
+- API Gateway → Cloud Functions Gen2 → SWAPI
+- Cache opcional (in-memory/Redis)
+- Logs no Cloud Logging
 
 ### Variáveis (preencha apenas esses valores)
 ```
@@ -422,7 +484,6 @@ GATEWAY_API_ID=holonet-api
 GATEWAY_CONFIG_ID=holonet-config
 GATEWAY_ID=holonet-gateway
 ```
-
 
 ### 1) Pré-requisitos + APIs (gcloud)
 
@@ -504,8 +565,6 @@ Pegar o hostname do gateway:
 gcloud api-gateway gateways describe "$GATEWAY_ID" --location "$REGION" --format="value(defaultHostname)"
 ```
 
-**Obs:** no Gateway, use apenas rotas `/v1/*` com `x-api-key`.
-
 Ativar o **serviço gerenciado** do Gateway (obrigatório para liberar chamadas com API Key):
 ```bash
 gcloud api-gateway apis describe "$GATEWAY_API_ID" --format="value(managedService)"
@@ -533,8 +592,8 @@ curl "https://$GATEWAY_HOST/v1/search?resource=people&q=luke" -H "x-api-key: $AP
 ```
 
 ### 6) Rate limiting / Proteção
-- **Gateway**: quotas devem ser configuradas em **APIs & Services > Quotas** para o serviço gerenciado do Gateway.
-- **App**: limites já aplicados via env (`MAX_PAGE_SIZE`, `MAX_UPSTREAM_PAGES`, `MAX_EXPAND_CONCURRENCY`).
+- **Gateway**: quotas em **APIs & Services > Quotas** para o serviço gerenciado do Gateway.
+- **App**: limites via env (`MAX_PAGE_SIZE`, `MAX_UPSTREAM_PAGES`, `MAX_EXPAND_CONCURRENCY`).
 
 ### 7) Observabilidade (logs)
 ```bash
@@ -548,41 +607,18 @@ curl "https://$GATEWAY_HOST/v1/health" -H "x-api-key: $API_KEY"
 curl "https://$GATEWAY_HOST/v1/meta" -H "x-api-key: $API_KEY"
 ```
 
-**Status (último deploy)**
-- Cloud Function Gen2: OK
-- API Gateway: OK
-- Smoke tests: OK
-
 ---
 
-## ✅ CI/CD
+## 🚀 Deploy no GCP - Cloud Run + API Gateway
 
-**CI (GitHub Actions)**  
-Roda em `pull_request` e `push` para `main`:
-- `ruff check`
-- `ruff format --check`
-- `bandit -r src`
-- `pip-audit`
-- `pytest` + coverage (fail < 70%)
+![Deploy](https://img.shields.io/badge/Deploy-Cloud%20Run-4285F4?logo=googlecloud&logoColor=white)
+![Gateway](https://img.shields.io/badge/API%20Gateway-Enabled-1A73E8?logo=googlecloud&logoColor=white)
+![Security](https://img.shields.io/badge/Security-IAM%20+%20API%20Key-4CAF50)
+![Monitoring](https://img.shields.io/badge/Monitoring-Cloud%20Logging-0F9D58?logo=googlecloud&logoColor=white)
 
-**CD (GitHub Actions – manual)**  
-Workflow `deploy.yml` (manual via `workflow_dispatch`) faz:
-- deploy da Cloud Function Gen2  
-- (opcional) update do API Gateway  
-- smoke tests `/v1/health` e `/v1/meta`
-
-**Secrets necessários (GitHub → Settings → Secrets and variables)**  
-- `GCP_PROJECT_ID`  
-- `GCP_REGION`  
-- `GCP_WORKLOAD_ID_PROVIDER` (se usar WIF)  
-- `GCP_SERVICE_ACCOUNT_EMAIL` (se usar WIF)  
-- `GOOGLE_CREDENTIALS` (alternativa simples com JSON)
-
-Checklist de release: `docs/RELEASE_CHECKLIST.md`
-
----
-
-## ☁️ Deploy opcional (Cloud Run)
+### 🔐 Segurança (IAM)
+- **Gerenciamento de acesso via IAM (Identity and Access Management)**: o Cloud Run fica privado e **apenas o API Gateway** recebe permissão de invocação.
+- Fluxo recomendado: remover `allUsers` e conceder `roles/run.invoker` ao service account do API Gateway.
 
 ```bash
 ./infra/gcloud/deploy_cloudrun.sh SEU_PROJETO us-central1 holonet-api
@@ -598,7 +634,97 @@ Guia detalhado: `docs/CLOUD_RUN_GATEWAY.md`.
 
 ---
 
-## 🧱 IaC (Terraform - bonus)
+## 🧪 Testes
+
+```bash
+pip install -r requirements-dev.txt
+pytest -q --cov=holonet --cov-report=term-missing
+```
+
+**Cobertura atual:** 100%  
+(validado com `pytest -q --cov=holonet --cov-report=term-missing`)
+
+**Windows (se houver conflito com arquivo `.coverage`)**
+```powershell
+$env:COVERAGE_FILE="$env:TEMP\\holonet_coverage"
+pytest -q --cov=holonet --cov-report=term-missing
+```
+
+Sem coverage:
+```bash
+pytest -q --no-cov
+```
+
+Paralelo (mais rápido):
+```bash
+pytest -q --no-cov -n auto
+```
+
+---
+
+## 🧹 Lint & Format
+
+```bash
+ruff check src tests
+ruff format --check src tests
+```
+
+---
+
+## 🔧 Pre-commit (bônus)
+
+```bash
+pip install pre-commit
+pre-commit install
+```
+
+---
+
+## 📮 Postman
+
+- Collection: `api/postman_collection.json`
+- Collection (local): `api/postman_collection_local.json`
+- Local env: `api/postman_environment_local.json`
+- Gateway env: `api/postman_environment_gateway.json`
+
+**Como usar**
+1. Importar a collection e o environment
+2. Selecionar o environment **Holonet Local** ou **Holonet Gateway**
+3. Para Gateway, preencher `api_key` e usar apenas rotas `/v1/*`
+4. Rodar as requests pelo Runner
+
+Guia completo: `docs/POSTMAN.md`
+
+---
+
+## 🔁 CI/CD
+
+**CI (GitHub Actions)**  
+Roda em `pull_request` e `push` para `main`:
+- `ruff check`
+- `ruff format --check`
+- `bandit -r src`
+- `pip-audit`
+- `pytest` + coverage (fail < 70%)
+
+**CD (GitHub Actions - manual)**  
+Workflow `deploy.yml` (manual via `workflow_dispatch`) faz:
+- deploy da Cloud Function Gen2  
+- (opcional) update do API Gateway  
+- smoke tests `/v1/health` e `/v1/meta`
+
+**Secrets necessarios (GitHub → Settings → Secrets and variables)**  
+- `GCP_PROJECT_ID`  
+- `GCP_REGION`  
+- `GCP_WORKLOAD_ID_PROVIDER` (se usar WIF)  
+- `GCP_SERVICE_ACCOUNT_EMAIL` (se usar WIF)  
+- `GOOGLE_CREDENTIALS` (alternativa simples com JSON)
+
+Checklist de release: `docs/RELEASE_CHECKLIST.md`
+
+---
+
+## 🏗️ IaC (Terraform - bônus)
 
 ```bash
 cd infra/terraform
@@ -606,7 +732,7 @@ terraform init
 terraform apply -var "project_id=SEU_PROJETO" -var "source_archive_path=../holonet-src.zip"
 ```
 
-**Nota:** `terraform plan` apenas **mostra** o que será criado (sem alterar nada).  
+**Nota:** `terraform plan` apenas **mostra** o que sera criado (sem alterar nada).  
 `terraform apply` **cria recursos reais** no GCP (pode gerar custos e duplicar o deploy manual).
 
 Obs: gere o zip com o codigo (ex: `zip -r holonet-src.zip src function_entrypoint.py requirements.txt`).
@@ -624,24 +750,24 @@ terraform apply -var "project_id=SEU_PROJETO" -var "source_archive_path=../holon
 
 ---
 
-## 📌 Checklist de requisitos
+## Checklist de requisitos
 - [x] Python + FastAPI
 - [x] Cloud Functions + API Gateway
 - [x] SWAPI como fonte
-- [x] Endpoints com filtros e correlações
+- [x] Endpoints com filtros e correlacoes
 - [x] Paginação e ordenação
-- [x] Cache e resiliência (timeouts/retries)
-- [x] Logs e correlação
-- [x] Testes unitários
+- [x] Cache e resiliencia (timeouts/retries)
+- [x] Logs e correlacao
+- [x] Testes unitarios
 - [x] OpenAPI (gateway)
-- [x] IaC (bonus)
+- [x] IaC (bônus)
 - [x] CI/CD (GitHub Actions)
 
 ---
 
-## 🧭 Trade-offs, observabilidade e melhorias
-- **Cloud Run recomendado para FastAPI (ASGI)**: Cloud Functions atende ao requisito do case; para produção, Cloud Run é mais apropriado para ASGI.
-- **Cache compartilhado**: usar Memorystore/Redis para consistência entre instâncias.
+## 🔭 Trade-offs, observabilidade e melhorias
+- **Cloud Run recomendado para FastAPI (ASGI)**: Cloud Functions atende ao requisito do case; para produção, Cloud Run e mais apropriado para ASGI.
+- **Cache compartilhado**: usar Memorystore/Redis para consistencia entre instancias.
 - **Rate limiting**: aplicar quotas no API Gateway.
 - **Observabilidade**: logs estruturados em JSON + `x-correlation-id`; evolução futura para OpenTelemetry.
 
@@ -664,7 +790,7 @@ terraform apply -var "project_id=SEU_PROJETO" -var "source_archive_path=../holon
 
 ---
 
-## 🧯 Troubleshooting
+## 🧩 Troubleshooting
 
 **Porta em uso**
 ```
@@ -681,19 +807,20 @@ uvicorn --app-dir src holonet.main:app --reload --port 8000
 - No Postman, preencha `api_key` no environment.
 
 **SWAPI indisponivel / 502**
-- A SWAPI pode estar instável; tente novamente.
-- Ajuste `HTTP_TIMEOUT_SECONDS` e `HTTP_RETRIES` se necessário.
+- A SWAPI pode estar instavel; tente novamente.
+- Ajuste `HTTP_TIMEOUT_SECONDS` e `HTTP_RETRIES` se necessario.
 
 **PERMISSION_DENIED (API Gateway)**
 - Verifique se o **serviço gerenciado** do Gateway foi habilitado no projeto:
   - `gcloud api-gateway apis describe "$GATEWAY_API_ID" --format="value(managedService)"`
   - `gcloud services enable "$MANAGED_SERVICE"`
-- Confirme se a API Key está restrita para **API Gateway API** e **Holonet Galactic Console API**.
+- Confirme se a API Key esta restrita para **API Gateway API** e **Holonet Galactic Console API**.
 
 **Swagger Editor (Try out)**
-- O Swagger Editor não executa chamadas reais para o seu domínio quando o `host` não está configurado corretamente.
-- Use `api/openapi-gateway.resolved.yaml` apenas para **visualizar** o contrato.
+- O Swagger Editor nao executa chamadas reais para o seu dominio quando o `host` nao esta configurado corretamente.
+- Use `api/openapi-gateway.yaml` para **visualizar** o contrato (e ajuste `host` manualmente se quiser simular).
 - Para testar de verdade, use Postman ou `curl` com o `GATEWAY_HOST`.
+
 **Mensagem sobre tag de ambiente do projeto**
 - Alguns projetos novos exigem tag `environment` (Production/Development/Test/Staging).
 - Siga o link do erro ou ignore se o deploy continuar funcionando.
@@ -702,10 +829,7 @@ uvicorn --app-dir src holonet.main:app --reload --port 8000
 
 ## 👤 Autor
 **Matheus Dutra**  
-Holonet Engineer · Jedi of APIs
+Holonet Engineer - Jedi of APIs
 
 ## 📄 Licença
-Distribuído sob a **MIT License**.
-
-
-
+Distribuido sob a **MIT License**.
