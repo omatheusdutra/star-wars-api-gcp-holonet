@@ -83,6 +83,7 @@ HOLONET-HUB/
 **Contrato OpenAPI (fonte da verdade)**
 - `api/openapi-gateway.yaml` → contrato usado no API Gateway (produção).
 - `api/openapi-local.yaml` → referência local para desenvolvimento.
+- `api/openapi-gateway.resolved.yaml` → **somente visualização** no Swagger Editor (não usar para deploy).
 
 ---
 
