@@ -65,6 +65,8 @@ HOLONET-HUB/
 ├─ function_entrypoint.py
 ├─ api/
 │  ├─ openapi-gateway.yaml
+│  ├─ openapi-local.yaml
+│  ├─ openapi-gateway.resolved.yaml
 │  ├─ postman_collection.json
 │  ├─ postman_environment_local.json
 │  ├─ postman_environment_gateway.json
@@ -209,7 +211,7 @@ Guia completo: `docs/POSTMAN.md`
 
 ### ✅ Health
 ```
-GET /health
+GET /health  # local/dev
 GET /v1/health
 GET /v1/meta
 ```
@@ -502,6 +504,8 @@ Pegar o hostname do gateway:
 gcloud api-gateway gateways describe "$GATEWAY_ID" --location "$REGION" --format="value(defaultHostname)"
 ```
 
+**Obs:** no Gateway, use apenas rotas `/v1/*` com `x-api-key`.
+
 Ativar o **serviço gerenciado** do Gateway (obrigatório para liberar chamadas com API Key):
 ```bash
 gcloud api-gateway apis describe "$GATEWAY_API_ID" --format="value(managedService)"
@@ -607,6 +611,11 @@ terraform apply -var "project_id=SEU_PROJETO" -var "source_archive_path=../holon
 
 Obs: gere o zip com o codigo (ex: `zip -r holonet-src.zip src function_entrypoint.py requirements.txt`).
 
+Windows (equivalente):
+```powershell
+Compress-Archive -Path src, function_entrypoint.py, requirements.txt -DestinationPath infra\\holonet-src.zip -Force
+```
+
 Para apontar o API Gateway para Cloud Run:
 
 ```bash
@@ -681,6 +690,10 @@ uvicorn --app-dir src holonet.main:app --reload --port 8000
   - `gcloud services enable "$MANAGED_SERVICE"`
 - Confirme se a API Key está restrita para **API Gateway API** e **Holonet Galactic Console API**.
 
+**Swagger Editor (Try out)**
+- O Swagger Editor não executa chamadas reais para o seu domínio quando o `host` não está configurado corretamente.
+- Use `api/openapi-gateway.resolved.yaml` apenas para **visualizar** o contrato.
+- Para testar de verdade, use Postman ou `curl` com o `GATEWAY_HOST`.
 **Mensagem sobre tag de ambiente do projeto**
 - Alguns projetos novos exigem tag `environment` (Production/Development/Test/Staging).
 - Siga o link do erro ou ignore se o deploy continuar funcionando.
