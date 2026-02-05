@@ -602,6 +602,9 @@ terraform init
 terraform apply -var "project_id=SEU_PROJETO" -var "source_archive_path=../holonet-src.zip"
 ```
 
+**Nota:** `terraform plan` apenas **mostra** o que será criado (sem alterar nada).  
+`terraform apply` **cria recursos reais** no GCP (pode gerar custos e duplicar o deploy manual).
+
 Obs: gere o zip com o codigo (ex: `zip -r holonet-src.zip src function_entrypoint.py requirements.txt`).
 
 Para apontar o API Gateway para Cloud Run:
