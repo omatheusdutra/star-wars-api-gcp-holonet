@@ -1,7 +1,7 @@
 ﻿# 📬 Postman Guide
 
 ## Collections
-- `api/postman_collection.json` (principal, com pasta Gateway + exemplos)
+- `api/postman_collection.json` (principal, rotas /v1 com API key)
 - `api/postman_collection_local.json` (somente local, sem API key)
 
 ## Environments
@@ -22,7 +22,7 @@
 2. Selecionar environment **Holonet Gateway**
 3. Preencher `base_url` com o hostname do Gateway
 4. Preencher `api_key` com sua API key
-5. Rodar a pasta **Gateway (API Key)**
+5. Rodar as rotas **/v1** (ex.: Core/Extras)
 
 ## Dica
 - Para testes rápidos, rode `Health` ou `Search` primeiro.
