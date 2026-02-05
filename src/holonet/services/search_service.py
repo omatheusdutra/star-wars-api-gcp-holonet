@@ -83,7 +83,7 @@ class SearchService:
         self, query: SearchQuery
     ) -> tuple[list[dict[str, Any]], dict[str, Any], dict[str, Any]]:
         page = query.page
-        page_size = min(query.page_size, settings.max_page_size)
+        page_size = query.page_size
 
         start = (page - 1) * page_size
         end = start + page_size

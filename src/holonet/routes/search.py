@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, Query
 
 from holonet.config import settings
 from holonet.deps import correlation_id_dependency, get_swapi_client, require_api_key
+from holonet.errors import AppError
 from holonet.schemas.common import ItemsEnvelope
 from holonet.schemas.search import SearchQuery
 from holonet.services.search_service import SearchService
@@ -22,11 +23,17 @@ def search(
     client=Depends(get_swapi_client),
     correlation_id: str = Depends(correlation_id_dependency),
 ):
+    if page_size > settings.max_page_size:
+        raise AppError(
+            "page_size exceeds maximum",
+            status_code=400,
+            details={"max_page_size": settings.max_page_size},
+        )
     query = SearchQuery(
         resource=resource,
         q=q,
         page=page,
-        page_size=min(page_size, settings.max_page_size),
+        page_size=page_size,
         sort=sort,
         order=order,
         fields=parse_fields(fields),

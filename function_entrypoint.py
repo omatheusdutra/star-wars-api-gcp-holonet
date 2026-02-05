@@ -1,9 +1,8 @@
 import os
 import sys
+from io import BytesIO
 
-import json
-
-from fastapi.testclient import TestClient
+from a2wsgi import ASGIMiddleware
 from werkzeug.wrappers import Response
 
 ROOT = os.path.dirname(__file__)
@@ -13,44 +12,26 @@ if SRC_PATH not in sys.path:
 
 from holonet.main import app as fastapi_app
 
-client = TestClient(fastapi_app)
-
-
-def _build_url(path: str, query_string: bytes) -> str:
-    qs = query_string.decode() if query_string else ""
-    if not qs:
-        return path
-    return f"{path}?{qs}"
+wsgi_app = ASGIMiddleware(fastapi_app)
 
 
 def app(request):
-    path = getattr(request, "path", "") or ""
+    environ = dict(request.environ)
+    environ.setdefault("wsgi.input", BytesIO())
+    environ.setdefault("REQUEST_METHOD", "GET")
+    environ.setdefault("SERVER_NAME", "localhost")
+    environ.setdefault("SERVER_PORT", "80")
+    environ.setdefault("SERVER_PROTOCOL", "HTTP/1.1")
+    environ.setdefault("wsgi.url_scheme", "http")
+    environ.setdefault("QUERY_STRING", "")
+    path = environ.get("PATH_INFO", "") or ""
     service = os.environ.get("K_SERVICE") or ""
     prefix = f"/{service}" if service else ""
     if prefix and path.startswith(prefix + "/"):
-        path = path[len(prefix) :]
-        request.environ["SCRIPT_NAME"] = prefix
-        request.environ["PATH_INFO"] = path
-    if path in ("/", "/health"):
-        payload = {"status": "ok"}
-        if path == "/":
-            payload = {
-                "name": "Holonet Galactic Console",
-                "version": "v1",
-                "status": "ok",
-            }
-        return Response(
-            json.dumps(payload), status=200, content_type="application/json"
-        )
-    url = _build_url(path, getattr(request, "query_string", b""))
-    headers = {k: v for k, v in request.headers.items() if k.lower() != "host"}
-    resp = client.request(request.method, url, headers=headers, data=request.get_data())
-    return Response(
-        resp.content,
-        status=resp.status_code,
-        headers=resp.headers,
-        content_type=resp.headers.get("content-type"),
-    )
+        environ["SCRIPT_NAME"] = prefix
+        environ["PATH_INFO"] = path[len(prefix) :]
+
+    return Response.from_app(wsgi_app, environ)
 
 
 __all__ = ["app"]
