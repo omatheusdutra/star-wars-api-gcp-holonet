@@ -1,6 +1,6 @@
 ﻿# 🌌 Holonet Galactic Console
 
-![FastAPI](https://img.shields.io/badge/FastAPI-0.115.6-009688?logo=fastapi&logoColor=white) ![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white) ![HTTPX](https://img.shields.io/badge/HTTPX-0.27.2-000000?logo=python&logoColor=white) ![Pydantic](https://img.shields.io/badge/Pydantic-2.6.1-E92063?logo=pydantic&logoColor=white) ![Uvicorn](https://img.shields.io/badge/Uvicorn-0.30.6-2F855A?logo=uvicorn&logoColor=white) ![Pytest](https://img.shields.io/badge/pytest-7.4.4-0A9EDC?logo=pytest&logoColor=white) ![Redis](https://img.shields.io/badge/Redis-5.0.1-DC382D?logo=redis&logoColor=white) ![GCP](https://img.shields.io/badge/GCP-Cloud%20Functions%20%26%20API%20Gateway-4285F4?logo=googlecloud&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.115.6-009688?logo=fastapi&logoColor=white) ![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white) ![HTTPX](https://img.shields.io/badge/HTTPX-0.27.2-000000?logo=python&logoColor=white) ![Pydantic](https://img.shields.io/badge/Pydantic-2.6.1-E92063?logo=pydantic&logoColor=white) ![Uvicorn](https://img.shields.io/badge/Uvicorn-0.30.6-2F855A?logo=uvicorn&logoColor=white) ![Pytest](https://img.shields.io/badge/pytest-7.4.4-0A9EDC?logo=pytest&logoColor=white) ![Redis](https://img.shields.io/badge/Redis-5.0.1-DC382D?logo=redis&logoColor=white) ![GCP](https://img.shields.io/badge/GCP-Cloud%20Functions%20%26%20API%20Gateway-4285F4?logo=googlecloud&logoColor=white)
 
 
 ![Holonet Banner](docs/banner.jpg)
@@ -85,7 +85,7 @@ HOLONET-HUB/
 ---
 
 ## ✅ Requisitos
-- Python 3.12+
+- Python 3.11+
 - `pip`
 - (Opcional) Redis para cache compartilhado
 - GCP CLI (`gcloud`) para deploy
@@ -194,8 +194,8 @@ pre-commit install
 
 **Como usar**
 1. Importar a collection e o environment
-2. Selecionar o environment **Holonet Local**
-3. Se usar API Key, preencher `api_key`
+2. Selecionar o environment **Holonet Local** ou **Holonet Gateway**
+3. Para Gateway, preencher `api_key` e usar apenas rotas `/v1/*`
 4. Rodar as requests pelo Runner
 
 Guia completo: `docs/POSTMAN.md`
