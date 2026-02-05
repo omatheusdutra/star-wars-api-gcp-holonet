@@ -49,6 +49,7 @@ Desktop.ini
 crash.log
 crash.*.log
 .terraform.lock.hcl
+infra/holonet-src.zip
 
 ### Node (if any tooling)
 node_modules/

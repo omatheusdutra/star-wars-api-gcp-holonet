@@ -5,10 +5,19 @@ terraform {
       source  = "hashicorp/google"
       version = "~> 5.0"
     }
+    google-beta = {
+      source  = "hashicorp/google-beta"
+      version = "~> 5.0"
+    }
   }
 }
 
 provider "google" {
+  project = var.project_id
+  region  = var.region
+}
+
+provider "google-beta" {
   project = var.project_id
   region  = var.region
 }
@@ -34,7 +43,7 @@ resource "google_cloudfunctions2_function" "holonet" {
   location = var.region
 
   build_config {
-    runtime     = "python312"
+    runtime     = "python311"
     entry_point = "app"
     source {
       storage_source {
@@ -64,10 +73,12 @@ resource "google_cloudfunctions2_function" "holonet" {
 }
 
 resource "google_api_gateway_api" "holonet" {
+  provider = google-beta
   api_id = "holonet-api"
 }
 
 resource "google_api_gateway_api_config" "holonet" {
+  provider      = google-beta
   api           = google_api_gateway_api.holonet.api_id
   api_config_id = "holonet-config"
 
@@ -82,6 +93,7 @@ resource "google_api_gateway_api_config" "holonet" {
 }
 
 resource "google_api_gateway_gateway" "holonet" {
+  provider  = google-beta
   gateway_id = "holonet-gw"
   api_config = google_api_gateway_api_config.holonet.id
   region     = var.region
