@@ -404,6 +404,7 @@ Infra opcional em `infra/terraform/`.
 ## 👤 Autor
 
 Matheus Dutra
+Holonet Engineer - Jedi of APIs
 
 ## 📄 Licença
 
