@@ -42,7 +42,7 @@ Notas:
 
 ---
 
-## 🔗 Acesso em Produção (API Gateway)
+## 🌐 Acesso em Produção (API Gateway)
 
 Base URL (Gateway):
 
