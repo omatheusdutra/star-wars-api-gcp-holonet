@@ -63,3 +63,4 @@ def test_build_cache_redis(monkeypatch):
     )
     cache.set("a", 1)
     assert cache.get("a") == 1
+    cache.clear()
