@@ -29,11 +29,11 @@ API em Python (FastAPI) para explorar a **SWAPI** (`https://swapi.dev/api`). A s
 
 ```mermaid
 flowchart LR
-  U[Cliente] --> G[API Gateway]
-  G --> R[Cloud Run (privado via IAM)]
-  R --> S[SWAPI (swapi.dev)]
-  R --> C[Cache (in-memory/Redis)]
-  R --> L[Cloud Logging]
+  U["Cliente"] --> G["API Gateway"]
+  G --> R["Cloud Run (privado via IAM)"]
+  R --> S["SWAPI (swapi.dev)"]
+  R --> C["Cache (in-memory/Redis)"]
+  R --> L["Cloud Logging"]
 ```
 
 Notas:
