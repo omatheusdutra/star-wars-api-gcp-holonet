@@ -2,7 +2,7 @@ swagger: "2.0"
 info:
   title: Holonet Galactic Console API
   version: "1.0.0"
-  description: API Gateway spec for Holonet Galactic Console (Cloud Functions Gen2).
+  description: API Gateway spec for Holonet Galactic Console (Cloud Run backend + API Gateway).
 schemes:
   - https
 produces:
@@ -13,7 +13,8 @@ paths:
       operationId: root
       security: []
       x-google-backend:
-        address: https://holonet-api-147959006843.us-central1.run.app
+        address: ${backend_url}
+        jwt_audience: ${backend_url}
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       responses:
@@ -24,7 +25,20 @@ paths:
       operationId: docs
       security: []
       x-google-backend:
-        address: https://holonet-api-147959006843.us-central1.run.app
+        address: ${backend_url}
+        jwt_audience: ${backend_url}
+        path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 60.0
+      responses:
+        "200":
+          description: OK
+  /docs/oauth2-redirect:
+    get:
+      operationId: docsOAuth2Redirect
+      security: []
+      x-google-backend:
+        address: ${backend_url}
+        jwt_audience: ${backend_url}
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       responses:
@@ -35,7 +49,20 @@ paths:
       operationId: openapiJson
       security: []
       x-google-backend:
-        address: https://holonet-api-147959006843.us-central1.run.app
+        address: ${backend_url}
+        jwt_audience: ${backend_url}
+        path_translation: APPEND_PATH_TO_ADDRESS
+        deadline: 60.0
+      responses:
+        "200":
+          description: OK
+  /redoc:
+    get:
+      operationId: redoc
+      security: []
+      x-google-backend:
+        address: ${backend_url}
+        jwt_audience: ${backend_url}
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       responses:
@@ -46,7 +73,8 @@ paths:
       operationId: publicFilms
       security: []
       x-google-backend:
-        address: https://holonet-api-147959006843.us-central1.run.app
+        address: ${backend_url}
+        jwt_audience: ${backend_url}
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       parameters:
@@ -88,7 +116,8 @@ paths:
       operationId: publicCharacters
       security: []
       x-google-backend:
-        address: https://holonet-api-147959006843.us-central1.run.app
+        address: ${backend_url}
+        jwt_audience: ${backend_url}
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       parameters:
@@ -130,7 +159,8 @@ paths:
       operationId: publicPlanets
       security: []
       x-google-backend:
-        address: https://holonet-api-147959006843.us-central1.run.app
+        address: ${backend_url}
+        jwt_audience: ${backend_url}
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       parameters:
@@ -172,7 +202,8 @@ paths:
       operationId: publicStarships
       security: []
       x-google-backend:
-        address: https://holonet-api-147959006843.us-central1.run.app
+        address: ${backend_url}
+        jwt_audience: ${backend_url}
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       parameters:
@@ -214,7 +245,8 @@ paths:
       operationId: publicVehicles
       security: []
       x-google-backend:
-        address: https://holonet-api-147959006843.us-central1.run.app
+        address: ${backend_url}
+        jwt_audience: ${backend_url}
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       parameters:
@@ -256,7 +288,8 @@ paths:
       operationId: publicSpecies
       security: []
       x-google-backend:
-        address: https://holonet-api-147959006843.us-central1.run.app
+        address: ${backend_url}
+        jwt_audience: ${backend_url}
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       parameters:
@@ -297,7 +330,8 @@ paths:
     get:
       operationId: health
       x-google-backend:
-        address: https://holonet-api-147959006843.us-central1.run.app
+        address: ${backend_url}
+        jwt_audience: ${backend_url}
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       responses:
@@ -307,7 +341,8 @@ paths:
     get:
       operationId: healthV1
       x-google-backend:
-        address: https://holonet-api-147959006843.us-central1.run.app
+        address: ${backend_url}
+        jwt_audience: ${backend_url}
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       responses:
@@ -317,7 +352,8 @@ paths:
     get:
       operationId: meta
       x-google-backend:
-        address: https://holonet-api-147959006843.us-central1.run.app
+        address: ${backend_url}
+        jwt_audience: ${backend_url}
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       responses:
@@ -327,7 +363,8 @@ paths:
     get:
       operationId: search
       x-google-backend:
-        address: https://holonet-api-147959006843.us-central1.run.app
+        address: ${backend_url}
+        jwt_audience: ${backend_url}
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       parameters:
@@ -369,7 +406,8 @@ paths:
     get:
       operationId: getFilm
       x-google-backend:
-        address: https://holonet-api-147959006843.us-central1.run.app
+        address: ${backend_url}
+        jwt_audience: ${backend_url}
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       parameters:
@@ -384,7 +422,8 @@ paths:
     get:
       operationId: getPerson
       x-google-backend:
-        address: https://holonet-api-147959006843.us-central1.run.app
+        address: ${backend_url}
+        jwt_audience: ${backend_url}
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       parameters:
@@ -399,7 +438,8 @@ paths:
     get:
       operationId: getPlanet
       x-google-backend:
-        address: https://holonet-api-147959006843.us-central1.run.app
+        address: ${backend_url}
+        jwt_audience: ${backend_url}
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       parameters:
@@ -414,7 +454,8 @@ paths:
     get:
       operationId: getStarship
       x-google-backend:
-        address: https://holonet-api-147959006843.us-central1.run.app
+        address: ${backend_url}
+        jwt_audience: ${backend_url}
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       parameters:
@@ -429,7 +470,8 @@ paths:
     get:
       operationId: getFilmCharacters
       x-google-backend:
-        address: https://holonet-api-147959006843.us-central1.run.app
+        address: ${backend_url}
+        jwt_audience: ${backend_url}
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       parameters:
@@ -444,7 +486,8 @@ paths:
     get:
       operationId: getPersonFilms
       x-google-backend:
-        address: https://holonet-api-147959006843.us-central1.run.app
+        address: ${backend_url}
+        jwt_audience: ${backend_url}
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       parameters:
@@ -459,7 +502,8 @@ paths:
     get:
       operationId: getGraph
       x-google-backend:
-        address: https://holonet-api-147959006843.us-central1.run.app
+        address: ${backend_url}
+        jwt_audience: ${backend_url}
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       responses:
@@ -469,7 +513,8 @@ paths:
     get:
       operationId: getPlanetsMap
       x-google-backend:
-        address: https://holonet-api-147959006843.us-central1.run.app
+        address: ${backend_url}
+        jwt_audience: ${backend_url}
         path_translation: APPEND_PATH_TO_ADDRESS
         deadline: 60.0
       responses:
@@ -482,6 +527,7 @@ securityDefinitions:
     name: x-api-key
 security:
   - apiKeyAuth: []
+
 
 
 

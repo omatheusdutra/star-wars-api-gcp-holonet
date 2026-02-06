@@ -17,7 +17,8 @@ class Settings(BaseSettings):
 
     api_page_size_default: int = Field(default=10, alias="API_PAGE_SIZE_DEFAULT")
     max_page_size: int = Field(default=50, alias="MAX_PAGE_SIZE")
-    max_upstream_pages: int = Field(default=6, alias="MAX_UPSTREAM_PAGES")
+    # SWAPI's "people" resource currently spans 9 pages; this cap prevents unbounded fan-out when `all=true`.
+    max_upstream_pages: int = Field(default=9, alias="MAX_UPSTREAM_PAGES")
     max_expand_concurrency: int = Field(default=8, alias="MAX_EXPAND_CONCURRENCY")
 
     graph_max_nodes: int = Field(default=250, alias="GRAPH_MAX_NODES")
