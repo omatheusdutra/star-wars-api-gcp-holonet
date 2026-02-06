@@ -1,6 +1,6 @@
 import os
 
-from tests import conftest
+import conftest
 
 
 def _restore_env(original_require, original_key):

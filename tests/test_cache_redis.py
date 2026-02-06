@@ -42,5 +42,7 @@ def test_redis_cache_missing_package(monkeypatch):
     monkeypatch.setattr(builtins, "__import__", fake_import)
     import json  # exercise non-redis import path
 
+    assert json.dumps({"ok": True})
+
     with pytest.raises(RuntimeError):
         RedisCache(redis_url="redis://localhost:6379/0", ttl_seconds=60)

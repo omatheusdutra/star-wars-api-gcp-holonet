@@ -5,16 +5,6 @@ from holonet.deps import correlation_id_dependency
 router = APIRouter(tags=["health"])
 
 
-@router.get("/")
-def root(correlation_id: str = Depends(correlation_id_dependency)):
-    return {
-        "message": "Luke, I am your father!",
-        "source": {"name": "holonet", "url": "internal"},
-        "cache": {"hit": False, "ttl": 0},
-        "correlation_id": correlation_id,
-    }
-
-
 @router.get("/health")
 def health(correlation_id: str = Depends(correlation_id_dependency)):
     return {
