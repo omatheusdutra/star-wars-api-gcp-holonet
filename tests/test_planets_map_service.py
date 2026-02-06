@@ -55,6 +55,10 @@ def test_planets_map_categories():
     assert categories["Dagobah"] == "frontier"
 
 
+def test_planets_map_fake_client_page_two_empty():
+    assert FakeClient().search("planets", None, 2) == {"results": [], "next": None}
+
+
 class PagedClient:
     def search(self, resource, query, page):
         if page == 1:
@@ -86,11 +90,16 @@ class PagedClient:
         return {"results": [], "next": None}
 
 
+def test_planets_map_paged_client_page_three_empty():
+    assert PagedClient().search("planets", None, 3) == {"results": [], "next": None}
+
+
 def test_planets_map_multiple_pages_and_categories():
     service = PlanetsMapService(PagedClient())
-    items = service.planets_map(page_size=1)
+    items = service.planets_map(page_size=2)
     categories = {item["name"]: item["category"] for item in items}
     assert categories["Ice"] == "ice"
+    assert categories["Weird"] == "unknown"
 
 
 def test_map_extract_id_cases():
@@ -107,3 +116,38 @@ def test_map_categorize_invalid_population():
     from holonet.services.planets_map_service import _categorize
 
     assert _categorize("not-a-number", "temperate", "mountains") == "unknown"
+
+
+def test_planets_map_breaks_on_page_size():
+    class BigPageClient:
+        def search(self, resource, query, page):
+            return {
+                "results": [
+                    {
+                        "name": "A",
+                        "population": "1",
+                        "terrain": "desert",
+                        "climate": "arid",
+                        "url": "https://swapi.dev/api/planets/10/",
+                    },
+                    {
+                        "name": "B",
+                        "population": "1",
+                        "terrain": "desert",
+                        "climate": "arid",
+                        "url": "https://swapi.dev/api/planets/11/",
+                    },
+                    {
+                        "name": "C",
+                        "population": "1",
+                        "terrain": "desert",
+                        "climate": "arid",
+                        "url": "https://swapi.dev/api/planets/12/",
+                    },
+                ],
+                "next": "page2",
+            }
+
+    service = PlanetsMapService(BigPageClient())
+    items = service.planets_map(page_size=2)
+    assert len(items) == 2
