@@ -4,7 +4,7 @@
 
 ![Holonet Banner](docs/banner.jpg)
 
-API em Python (FastAPI) para explorar a **SWAPI** (`https://swapi.dev/api`). A solução roda no **Google Cloud Platform (GCP)** com **API Gateway** como camada pública e **Cloud Run** (privado via IAM) como backend serverless.
+Uma API em Python (FastAPI) que transforma a **SWAPI** (`https://swapi.dev/api`) em uma experiência mais rica para fãs de Star Wars: busca unificada, paginação normalizada, ordenação segura, projeção de campos e endpoints correlacionados (filmes/personagens etc.). A solução roda na **Google Cloud Platform (GCP)** em arquitetura serverless, com **API Gateway** como camada pública e **Cloud Run** (privado via IAM) como backend, garantindo controle de acesso e observabilidade.
 
 > **Documentação técnica (para avaliação):** este `README.md` + pasta `docs/` (deploys, Postman e checklist).
 
@@ -62,9 +62,36 @@ OpenAPI JSON:
 https://holonet-gateway-1vyyz0cb.uc.gateway.dev/openapi.json
 ```
 
-Endpoints principais (navegação):
-- `/` (boas-vindas)
-- `/films`, `/characters`, `/planets`, `/starships`, `/vehicles`, `/species`
+**Endpoints principais**
+
+- Base:
+  ```text
+  https://holonet-gateway-1vyyz0cb.uc.gateway.dev/
+  ```
+- Filmes:
+  ```text
+  https://holonet-gateway-1vyyz0cb.uc.gateway.dev/films
+  ```
+- Personagens:
+  ```text
+  https://holonet-gateway-1vyyz0cb.uc.gateway.dev/characters
+  ```
+- Planetas:
+  ```text
+  https://holonet-gateway-1vyyz0cb.uc.gateway.dev/planets
+  ```
+- Naves:
+  ```text
+  https://holonet-gateway-1vyyz0cb.uc.gateway.dev/starships
+  ```
+- Veículos:
+  ```text
+  https://holonet-gateway-1vyyz0cb.uc.gateway.dev/vehicles
+  ```
+- Espécies:
+  ```text
+  https://holonet-gateway-1vyyz0cb.uc.gateway.dev/species
+  ```
 
 Rotas protegidas:
 - `/v1/*` exige `x-api-key` (API Gateway).
