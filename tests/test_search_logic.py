@@ -49,6 +49,18 @@ def test_search_pagination_sort_fields():
     assert set(items[0].keys()) == {"name", "id"}
 
 
+def test_search_fetches_next_page_when_needed():
+    client = FakeClient()
+    service = SearchService(client)
+
+    query = SearchQuery(resource="people", q="", page=1, page_size=3)
+    items, pagination, _cache = service.search(query)
+
+    assert client.calls == [1, 2]
+    assert [item["name"] for item in items] == ["Leia", "Luke", "Anakin"]
+    assert pagination["total_items"] == 3
+
+
 def test_search_invalid_sort_field():
     client = FakeClient()
     service = SearchService(client)
