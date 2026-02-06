@@ -3,6 +3,7 @@
     [string]$GatewayHost = "",
     [string]$ApiKey = "",
     [string]$RunUrl = "",
+    [switch]$StartLocal,
     [switch]$SkipTests
 )
 
@@ -45,7 +46,8 @@ function Test-LocalPort($hostname, $port) {
 if (-not $SkipTests) {
     Write-Section "Lint & Tests"
     try { python -m ruff check src tests } catch { Write-Host "ruff check failed" -ForegroundColor Yellow }
-    try { python -m ruff format src tests } catch { Write-Host "ruff format failed" -ForegroundColor Yellow }
+    # Keep verification non-mutating.
+    try { python -m ruff format --check src tests } catch { Write-Host "ruff format --check failed" -ForegroundColor Yellow }
     try { pytest -q } catch { Write-Host "pytest failed" -ForegroundColor Yellow }
 }
 
@@ -53,12 +55,47 @@ Write-Section "Local API"
 $localUri = [Uri]$LocalBaseUrl
 $localHost = $localUri.Host
 $localPort = $localUri.Port
-if (Test-LocalPort $localHost $localPort) {
-    Invoke-Check "Local /health" "$LocalBaseUrl/health"
-    Invoke-Check "Local /films" "$LocalBaseUrl/films"
-    Invoke-Check "Local /v1/search" "$LocalBaseUrl/v1/search?resource=people&q=luke"
-} else {
-    Write-Host "Local server not running on ${localHost}:${localPort}. Skipping Local API checks." -ForegroundColor Yellow
+$localProc = $null
+try {
+    if ($StartLocal -and -not (Test-LocalPort $localHost $localPort)) {
+        Write-Host "Starting local Uvicorn server on ${localHost}:${localPort}..." -ForegroundColor Yellow
+        $localProc = Start-Process -FilePath "python" -PassThru -WindowStyle Hidden -ArgumentList @(
+            "-m",
+            "uvicorn",
+            "--app-dir",
+            "src",
+            "holonet.main:app",
+            "--host",
+            $localHost,
+            "--port",
+            "$localPort"
+        )
+        for ($i = 0; $i -lt 30; $i++) {
+            Start-Sleep -Seconds 1
+            if (Test-LocalPort $localHost $localPort) { break }
+        }
+    }
+
+    if (Test-LocalPort $localHost $localPort) {
+        Invoke-Check "Local /health" "$LocalBaseUrl/health"
+        # Keep local checks fast: request only 1 page when applicable.
+        Invoke-Check "Local /films" "$LocalBaseUrl/films?all=false"
+        Invoke-Check "Local /characters" "$LocalBaseUrl/characters?all=false"
+        Invoke-Check "Local /planets" "$LocalBaseUrl/planets?all=false"
+        Invoke-Check "Local /starships" "$LocalBaseUrl/starships?all=false"
+        Invoke-Check "Local /vehicles" "$LocalBaseUrl/vehicles?all=false"
+        Invoke-Check "Local /species" "$LocalBaseUrl/species?all=false"
+        Invoke-Check "Local /v1/search" "$LocalBaseUrl/v1/search?resource=people&q=luke"
+    } else {
+        Write-Host "Local server not running on ${localHost}:${localPort}. Skipping Local API checks." -ForegroundColor Yellow
+    }
+} finally {
+    if ($localProc) {
+        try {
+            Stop-Process -Id $localProc.Id -Force
+            Write-Host "Stopped local Uvicorn (pid $($localProc.Id))." -ForegroundColor Yellow
+        } catch {}
+    }
 }
 
 Write-Section "Cloud Run (IAM)"
@@ -74,7 +111,10 @@ if ($RunUrl) {
         $token = gcloud auth print-identity-token
         $auth = @{ Authorization = "Bearer $token" }
         Invoke-Check "Run /health" "$RunUrl/health" $auth
-        Invoke-Check "Run /films" "$RunUrl/films" $auth
+        Invoke-Check "Run /films" "$RunUrl/films?all=false" $auth
+        Invoke-Check "Run /characters" "$RunUrl/characters?all=false" $auth
+        Invoke-Check "Run /planets" "$RunUrl/planets?all=false" $auth
+        Invoke-Check "Run /v1/search" "$RunUrl/v1/search?resource=people&q=luke" $auth
     } catch {
         Write-Host "Cloud Run checks failed: $($_.Exception.Message)" -ForegroundColor Yellow
     }
@@ -88,7 +128,16 @@ if (-not $ApiKey -and $env:HOLONET_API_KEY) {
 if ($GatewayHost -and $ApiKey) {
     $headers = @{ "x-api-key" = $ApiKey }
     Invoke-Check "Gateway /v1/health" "https://$GatewayHost/v1/health" $headers
-    Invoke-Check "Gateway /films" "https://$GatewayHost/films" $headers
+    Invoke-Check "Gateway /v1/meta" "https://$GatewayHost/v1/meta" $headers
+
+    # Public browsing endpoints (no /v1) - keep fast
+    Invoke-Check "Gateway /films" "https://$GatewayHost/films?all=false" $headers
+    Invoke-Check "Gateway /characters" "https://$GatewayHost/characters?all=false" $headers
+    Invoke-Check "Gateway /planets" "https://$GatewayHost/planets?all=false" $headers
+    Invoke-Check "Gateway /starships" "https://$GatewayHost/starships?all=false" $headers
+    Invoke-Check "Gateway /vehicles" "https://$GatewayHost/vehicles?all=false" $headers
+    Invoke-Check "Gateway /species" "https://$GatewayHost/species?all=false" $headers
+
     Invoke-Check "Gateway /v1/search" "https://$GatewayHost/v1/search?resource=people&q=luke" $headers
 } else {
     Write-Host "GatewayHost or ApiKey not provided. Skipping Gateway checks." -ForegroundColor Yellow
