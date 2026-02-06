@@ -306,10 +306,18 @@ O script `scripts/verify_all.ps1` valida rapidamente:
 Exemplo (não commitar a API key):
 ```powershell
 $env:HOLONET_API_KEY = "SUA_API_KEY"
+
+# Opção A: passar explicitamente (útil para CI ou copy/paste)
 .\scripts\verify_all.ps1 `
   -StartLocal `
   -GatewayHost "holonet-gateway-1vyyz0cb.uc.gateway.dev" `
   -ApiKey $env:HOLONET_API_KEY `
+  -RunUrl "https://holonet-api-147959006843.us-central1.run.app"
+
+# Opção B: omitir -ApiKey (o script lê $env:HOLONET_API_KEY automaticamente)
+.\scripts\verify_all.ps1 `
+  -StartLocal `
+  -GatewayHost "holonet-gateway-1vyyz0cb.uc.gateway.dev" `
   -RunUrl "https://holonet-api-147959006843.us-central1.run.app"
 ```
 
