@@ -3,7 +3,7 @@ set -euo pipefail
 
 PROJECT_ID="${1:-}"
 REGION="${2:-us-central1}"
-FUNCTION_NAME="${3:-holonet-api}"
+BACKEND_REF="${3:-holonet-api}"
 GATEWAY_API_ID="${4:-holonet-api}"
 GATEWAY_CONFIG_ID="${5:-holonet-config}"
 GATEWAY_ID="${6:-holonet-gateway}"
@@ -15,17 +15,34 @@ fi
 
 gcloud config set project "$PROJECT_ID"
 
-FUNCTION_URL="$(gcloud functions describe "$FUNCTION_NAME" --gen2 --region "$REGION" --format='value(url)')"
-if [[ -z "$FUNCTION_URL" ]]; then
-  FUNCTION_URL="$(gcloud functions describe "$FUNCTION_NAME" --gen2 --region "$REGION" --format='value(serviceConfig.uri)')"
+BACKEND_URL=""
+
+# 1) Allow passing an explicit backend URL (Cloud Run / Cloud Functions / other).
+if [[ "${BACKEND_REF}" =~ ^https?:// ]]; then
+  BACKEND_URL="${BACKEND_REF}"
 fi
-if [[ -z "$FUNCTION_URL" ]]; then
-  echo "Could not resolve Cloud Function URL for $FUNCTION_NAME in $REGION."
+
+# 2) Backward compatible: try resolving as Cloud Function name (Gen2).
+if [[ -z "$BACKEND_URL" ]]; then
+  BACKEND_URL="$(gcloud functions describe "$BACKEND_REF" --gen2 --region "$REGION" --format='value(url)' 2>/dev/null || true)"
+  if [[ -z "$BACKEND_URL" ]]; then
+    BACKEND_URL="$(gcloud functions describe "$BACKEND_REF" --gen2 --region "$REGION" --format='value(serviceConfig.uri)' 2>/dev/null || true)"
+  fi
+fi
+
+# 3) If still empty, try resolving as Cloud Run service name.
+if [[ -z "$BACKEND_URL" ]]; then
+  BACKEND_URL="$(gcloud run services describe "$BACKEND_REF" --region "$REGION" --format='value(status.url)' 2>/dev/null || true)"
+fi
+
+if [[ -z "$BACKEND_URL" ]]; then
+  echo "Could not resolve backend URL for '$BACKEND_REF' in $REGION."
+  echo "Pass a Cloud Run URL (https://...) or a Cloud Run service name, or a Cloud Function name."
   exit 1
 fi
 
 TMP_SPEC="$(mktemp --suffix=.yaml)"
-sed "s|\${backend_url}|$FUNCTION_URL|g" api/openapi-gateway.yaml > "$TMP_SPEC"
+sed "s|\${backend_url}|$BACKEND_URL|g" api/openapi-gateway.yaml > "$TMP_SPEC"
 
 if ! gcloud api-gateway apis describe "$GATEWAY_API_ID" >/dev/null 2>&1; then
   gcloud api-gateway apis create "$GATEWAY_API_ID"

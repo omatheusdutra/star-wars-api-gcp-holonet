@@ -17,7 +17,7 @@ jobs:
     env:
       PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
       REGION: ${{ secrets.GCP_REGION }}
-      FUNCTION_NAME: holonet-api
+      SERVICE_NAME: holonet-api
       GATEWAY_API_ID: holonet-api
       GATEWAY_CONFIG_ID: holonet-config
       GATEWAY_ID: holonet-gateway
@@ -43,17 +43,32 @@ jobs:
       - name: Set up gcloud
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Deploy Cloud Function (Gen2)
+      - name: Deploy Cloud Run (private via IAM)
         run: |
-          bash infra/gcloud/deploy.sh "$PROJECT_ID" "$REGION" "$FUNCTION_NAME"
+          bash infra/gcloud/deploy_cloudrun.sh "$PROJECT_ID" "$REGION" "$SERVICE_NAME"
+
+      - name: Grant API Gateway invoker on Cloud Run (IAM)
+        run: |
+          PROJECT_NUMBER="$(gcloud projects describe "$PROJECT_ID" --format='value(projectNumber)')"
+          # Remove public invoker if present (no-op if already removed).
+          gcloud run services remove-iam-policy-binding "$SERVICE_NAME" \
+            --region "$REGION" \
+            --member="allUsers" \
+            --role="roles/run.invoker" || true
+
+          # Allow API Gateway managed service account to invoke Cloud Run.
+          gcloud run services add-iam-policy-binding "$SERVICE_NAME" \
+            --region "$REGION" \
+            --member="serviceAccount:service-${PROJECT_NUMBER}@gcp-sa-apigateway.iam.gserviceaccount.com" \
+            --role="roles/run.invoker"
 
       - name: Update API Gateway
         if: ${{ inputs.run_gateway_update == 'true' }}
         run: |
-          bash infra/gcloud/create_gateway.sh "$PROJECT_ID" "$REGION" "$FUNCTION_NAME" "$GATEWAY_API_ID" "$GATEWAY_CONFIG_ID" "$GATEWAY_ID"
+          bash infra/gcloud/create_gateway.sh "$PROJECT_ID" "$REGION" "$SERVICE_NAME" "$GATEWAY_API_ID" "$GATEWAY_CONFIG_ID" "$GATEWAY_ID"
 
-      - name: Smoke tests (Function URL)
+      - name: Smoke tests (Gateway public routes)
         run: |
-          FUNCTION_URL=$(gcloud functions describe "$FUNCTION_NAME" --gen2 --region "$REGION" --format='value(url)')
-          curl -fsS "$FUNCTION_URL/v1/health"
-          curl -fsS "$FUNCTION_URL/v1/meta"
+          GATEWAY_HOST=$(gcloud api-gateway gateways describe "$GATEWAY_ID" --location "$REGION" --format='value(defaultHostname)')
+          curl -fsS "https://$GATEWAY_HOST/health"
+          curl -fsS "https://$GATEWAY_HOST/openapi.json" >/dev/null
